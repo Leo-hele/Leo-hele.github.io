@@ -6,7 +6,7 @@ favicon:
 
 navigation:
   - name: 首页
-    url: /
+    url: /index.html
   - name: 关于
     url: /about/
   - name: 程序
