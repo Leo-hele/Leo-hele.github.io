@@ -195,184 +195,115 @@
         </main>
     </div>
 
-    <script>
-        // 当前路径
-        let currentCodePath = './_programs';
-        let currentBlogPath = './_posts';
-        
-        // 页面加载时显示默认内容
-        window.onload = function() {
-            loadFileList(currentCodePath);
-            loadPostList(currentBlogPath);
-            hljs.highlightAll();
-        };
-        
-        // 切换标签页
-        function showTab(tabId) {
-            // 更新标签样式
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.dataset.tab === tabId) {
-                    tab.classList.add('active');
-                }
-            });
+    <!-- 在之前的HTML文件中，替换JavaScript部分为： -->
+<script>
+    // 当前路径
+    let currentCodePath = './_programs';
+    let currentBlogPath = './_posts';
+    
+    // 页面加载时显示默认内容
+    window.onload = function() {
+        loadFileList(currentCodePath);
+        loadPostList();
+        hljs.highlightAll();
+    };
+    
+    // 加载文件列表的函数
+    async function loadFileList(path) {
+        try {
+            const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`);
+            const files = await response.json();
             
-            // 更新内容区域
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                if (content.id === tabId) {
-                    content.classList.add('active');
-                }
-            });
-        }
-        
-        // 加载文件列表的函数
-        function loadFileList(path) {
-            fetchFileList(path).then(files => {
-                const fileListElement = document.getElementById('fileList');
-                fileListElement.innerHTML = '';
-                
-                // 如果不是根目录，添加返回上一级链接
-                if (path !== './_programs') {
-                    const parentPath = path.substring(0, path.lastIndexOf('/'));
-                    const backItem = document.createElement('li');
-                    backItem.className = 'file-item';
-                    backItem.innerHTML = `
-                        <a href="javascript:void(0)" onclick="loadFileList('${parentPath}')" class="file-link">
-                            <span class="file-icon">↩</span> 返回上一级
-                        </a>
-                    `;
-                    fileListElement.appendChild(backItem);
-                }
-                
-                // 先添加文件夹
-                files.filter(file => file.isDirectory).forEach(file => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'file-item';
-                    listItem.innerHTML = `
-                        <a href="javascript:void(0)" onclick="loadFileList('${file.fullPath}')" class="file-link folder">
-                            <span class="file-icon">📁</span> ${file.name}/
-                        </a>
-                    `;
-                    fileListElement.appendChild(listItem);
-                });
-                
-                // 再添加文件
-                files.filter(file => !file.isDirectory).forEach(file => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'file-item';
-                    listItem.innerHTML = `
-                        <a href="${file.fullPath}" class="file-link" target="_blank">
-                            <span class="file-icon">📄</span> ${file.name}
-                        </a>
-                    `;
-                    fileListElement.appendChild(listItem);
-                });
-            }).catch(error => {
-                console.error('加载文件列表出错:', error);
-                alert('无法加载文件列表，请检查目录是否存在或查看控制台获取更多信息。');
-            });
-        }
-        
-        // 加载博客文章列表的函数
-        function loadPostList(path) {
-            fetchPostList(path).then(posts => {
-                const postListElement = document.getElementById('postList');
-                postListElement.innerHTML = '';
-                
-                posts.forEach(post => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'post-item';
-                    listItem.innerHTML = `
-                        <a href="javascript:void(0)" onclick="loadPostContent('${post.fullPath}')" class="post-link">
-                            ${post.title}
-                        </a>
-                        <div class="post-meta">${post.date} • ${post.tags ? post.tags.join(', ') : '无标签'}</div>
-                    `;
-                    postListElement.appendChild(listItem);
-                });
-            }).catch(error => {
-                console.error('加载文章列表出错:', error);
-                alert('无法加载文章列表，请检查目录是否存在或查看控制台获取更多信息。');
-            });
-        }
-        
-        // 加载博客文章内容的函数
-        function loadPostContent(postPath) {
-            fetch(postPath)
-                .then(response => response.text())
-                .then(markdown => {
-                    // 解析Markdown
-                    const html = marked.parse(markdown);
-                    document.getElementById('blogContent').innerHTML = html;
-                    
-                    // 重新高亮代码块
-                    document.querySelectorAll('pre code').forEach(block => {
-                        hljs.highlightElement(block);
-                    });
-                    
-                    // 滚动到内容区域
-                    document.getElementById('blogContent').scrollIntoView({ behavior: 'smooth' });
-                })
-                .catch(error => {
-                    console.error('加载文章内容出错:', error);
-                    document.getElementById('blogContent').innerHTML = '<p>无法加载文章内容。</p>';
-                });
-        }
-        
-        // 模拟获取文件列表的函数
-        async function fetchFileList(path) {
-            // 这里应该是实际获取文件列表的逻辑
-            // 由于浏览器限制，你可能需要：
-            // 1. 使用后端API获取文件列表
-            // 2. 预生成文件列表JSON
-            // 3. 使用Electron等桌面应用框架
+            const fileListElement = document.getElementById('fileList');
+            fileListElement.innerHTML = '';
             
-            // 以下是模拟数据示例
-            if (path === './_programs') {
-                return [
-                    { name: 'hello.py', fullPath: './_programs/hello.py', isDirectory: false },
-                    { name: 'utils', fullPath: './_programs/utils', isDirectory: true },
-                    { name: 'main.js', fullPath: './_programs/main.js', isDirectory: false }
-                ];
-            } else if (path === './_programs/utils') {
-                return [
-                    { name: 'helper.js', fullPath: './_programs/utils/helper.js', isDirectory: false },
-                    { name: 'config.json', fullPath: './_programs/utils/config.json', isDirectory: false }
-                ];
+            // 如果不是根目录，添加返回上一级链接
+            if (path !== './_programs') {
+                const parentPath = path.substring(0, path.lastIndexOf('/'));
+                const backItem = document.createElement('li');
+                backItem.className = 'file-item';
+                backItem.innerHTML = `
+                    <a href="javascript:void(0)" onclick="loadFileList('${parentPath}')" class="file-link">
+                        <span class="file-icon">↩</span> 返回上一级
+                    </a>
+                `;
+                fileListElement.appendChild(backItem);
             }
             
-            // 如果没有匹配的路径，返回空数组
-            return [];
-        }
-        
-        // 模拟获取博客文章列表的函数
-        async function fetchPostList(path) {
-            // 这里应该是实际获取文章列表的逻辑
-            // 需要解析Markdown文件的元数据（如标题、日期、标签等）
+            // 先添加文件夹
+            files.filter(file => file.isDirectory).forEach(file => {
+                const listItem = document.createElement('li');
+                listItem.className = 'file-item';
+                listItem.innerHTML = `
+                    <a href="javascript:void(0)" onclick="loadFileList('${file.path}')" class="file-link folder">
+                        <span class="file-icon">📁</span> ${file.name}/
+                    </a>
+                `;
+                fileListElement.appendChild(listItem);
+            });
             
-            // 以下是模拟数据示例
-            return [
-                { 
-                    title: '我的第一篇博客', 
-                    fullPath: './_posts/first-post.md', 
-                    date: '2023-05-15', 
-                    tags: ['随笔', '介绍'] 
-                },
-                { 
-                    title: 'JavaScript学习笔记', 
-                    fullPath: './_posts/js-notes.md', 
-                    date: '2023-06-20', 
-                    tags: ['JavaScript', '编程'] 
-                },
-                { 
-                    title: '项目开发经验', 
-                    fullPath: './_posts/project-experience.md', 
-                    date: '2023-07-10', 
-                    tags: ['项目', '经验分享'] 
-                }
-            ];
+            // 再添加文件
+            files.filter(file => file.isFile).forEach(file => {
+                const listItem = document.createElement('li');
+                listItem.className = 'file-item';
+                listItem.innerHTML = `
+                    <a href="${file.path}" class="file-link" target="_blank">
+                        <span class="file-icon">📄</span> ${file.name}
+                    </a>
+                `;
+                fileListElement.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error('加载文件列表出错:', error);
+            alert('无法加载文件列表，请确保服务器正在运行。');
         }
-    </script>
+    }
+    
+    // 加载博客文章列表的函数
+    async function loadPostList() {
+        try {
+            const response = await fetch('/api/posts');
+            const posts = await response.json();
+            
+            const postListElement = document.getElementById('postList');
+            postListElement.innerHTML = '';
+            
+            posts.forEach(post => {
+                const listItem = document.createElement('li');
+                listItem.className = 'post-item';
+                listItem.innerHTML = `
+                    <a href="javascript:void(0)" onclick="loadPostContent('${post.path}')" class="post-link">
+                        ${post.name.replace('.md', '')}
+                    </a>
+                `;
+                postListElement.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error('加载文章列表出错:', error);
+            alert('无法加载文章列表，请确保服务器正在运行。');
+        }
+    }
+    
+    // 加载博客文章内容的函数
+    async function loadPostContent(postPath) {
+        try {
+            const response = await fetch(`/api/post?path=${encodeURIComponent(postPath)}`);
+            const post = await response.json();
+            
+            document.getElementById('blogContent').innerHTML = post.content;
+            
+            // 重新高亮代码块
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+            
+            // 滚动到内容区域
+            document.getElementById('blogContent').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('加载文章内容出错:', error);
+            document.getElementById('blogContent').innerHTML = '<p>无法加载文章内容。</p>';
+        }
+    }
+</script>
 </body>
 </html>
