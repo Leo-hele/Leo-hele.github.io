@@ -2,26 +2,93 @@ body {
     background-color: #000000;
     background-size: cover;
     background-position: center;
+    color: #ffffff;
+    user-select: none;
+    margin: 0;
 }
+
+.div-fixid {
+    position: fixed;
+}
+
 a {
     color: #7f7fff;
     text-decoration: none;
 }
-content {
-    max-height: 200px; /* 内容区域最大高度为200px */
-    overflow: hidden; /* 超出部分隐藏 */
-    transition: max-height 0.5s ease-in-out; /* 展开和收起时的过渡效果 */
+
+.header {
+    background-color: #313132;
+    height: 44px;
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    position: fixed;
+    z-index: 999;
 }
 
-toggle-button {
+.headerItem {
+    color: #f5f5f7;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.toc-ignore {
+}
+
+img {
     display: block;
-    margin: 0 auto; /* 水平居中显示按钮 */
-    padding: 10px 20px; /* 按钮的内边距 */
-    background-color: rgba(255, 255, 255, 0.5); /* 透明背景 */
-    border: 2px solid #33b8e1; /* 天蓝色边框 */
-    color: #33b8e1; /* 天蓝色字体 */
-    font-size: 16px; /* 字体大小 */
-    font-weight: bold; /* 加粗字体 */
-    cursor: pointer; /* 鼠标指针变为手形 */
-    transition: background-color 0.3s ease; /* 背景颜色过渡效果 */
+}
+
+pre {
+    width: 100%;
+    padding-top: 40px;
+    overflow: auto;
+    max-height: 400px;
+    background-color: rgba(128, 128, 128, 1);
+    border-radius: 8px;
+    border: inset #ffffff;
+    user-select: text;
+}
+
+code {
+    user-select: text;
+}
+
+.MathJax_Display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    user-select: text;
+}
+
+.heading-a {
+    color: #ffffff;
+    text-decoration: underline #0000ff solid 5px;
+    cursor: default;
+}
+
+.heading-aa {
+    text-decoration: underline #0000ff solid 5px;
+}
+
+.back {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }

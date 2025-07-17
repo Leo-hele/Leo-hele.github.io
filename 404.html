@@ -1,49 +1,8 @@
 ---
-permalink: /404.html
-layout: page
+layout: default
 ---
+<h1>404 Not found</h1>
+<p><strong>页面不存在</strong></p>
+<p>您访问的页面不存在，可能是因为链接已过期，或者您直接进入了错误的地址。</p>
+<p>建议您<a href="./index.html">返回首页</a>、<a href="javascript:history.back()">返回上一页</a> ，或者使用搜索功能查找您需要的内容。</p>
 
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 Not found</title>
-  <link rel="icon" href="https://gitee.com/Leo-hele/pic-go-image/raw/master/202507181107246.ico" type="image/x-icon" />
-  <link type="text/css" rel="stylesheet" href="./style.css">
-  <script src="./js/getDate.js"></script>
-  <
-</head>
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-  body {
-    background-color: #ffffff;
-  }
-</style>
-<body>
-  <div style="user-select: none;">
-    <div class="container">
-      <h1>404 Not found</h1>
-      <p><strong>页面不存在</strong></p>
-      <p>您访问的页面不存在，可能是因为链接已过期，或者您直接进入了错误的地址。</p>
-      <p>建议您<a href="./index.html">返回首页</a>、<a href="javascript:history.back()">返回上一页</a> ，或者使用搜索功能查找您需要的内容。</p>
-      <script>
-        // 显示当前时间
-        document.write("<p id='time' style='position: absolute; top: 90%; left: 0;'>当前时间: " + date() + "</p>");
-        // 每秒更新一次时间
-        setInterval(function() {
-          document.querySelector("p#time").innerHTML = "当前时间: " + date();
-        }, 1000);
-      </script>
-    </div>
-  </div>
-</body>

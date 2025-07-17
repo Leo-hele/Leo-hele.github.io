@@ -1,41 +1,9 @@
-<! doctype html>
-<html lang="zh-cn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo's site</title>
-    <link type="text/css" rel="stylesheet" href="./style.css">
-    <link rel="icon" href="https://gitee.com/Leo-hele/pic-go-image/raw/master/hele.ico" type="image/x-icon" />
-    <script src="./js/getDate.js"></script>
-</head>
-<body>
-    <div style="color: #ffffff; user-select: none;">
-        <div style="color: #ffff00; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <strong style="font-size: 40px;">保持安静</strong>
-        </div>
-        <h1>Welcome to Leo's site</h1>
-        <h1>欢迎来到Leo的网站</h1>
-        <noscript>
-            <h2>您的浏览器不支持JavaScript</h2>
-            <p>请启用JavaScript以获得更好的体验</p>
-        </noscript>
-
-        <script>
-            // 显示当前时间
-            document.write("<p id='time' style='position: absolute; top: 90%; left: 0;'>当前时间: " + date() + "</p>");
-            // 每秒更新一次时间
-            setInterval(function() {
-                document.querySelector("p#time").innerHTML = "当前时间: " + date();
-            }, 1000);
-        </script>
-        <ul>
-            <li>
-                <a href="./programs.html">我的代码</a>
-            </li>
-            <li>
-                <a href="./blogs.html">我的文章</a>
-            </li>
-        </ul>
-    </div>
-</body>
-</html>
+---
+layout: default
+---
+{% for item in site.other-urls %}
+<a href="{{ item.link }}"target="_blank">
+    跳转到个人{{ item.name }}
+</a>
+<br />
+{% endfor %}

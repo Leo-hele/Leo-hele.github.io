@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - {{ site.title }}</title>
+    <link type="text/css" rel="stylesheet" href="../style.css">
+    <link rel="icon" href="https://gitee.com/Leo-hele/picGo-image/raw/master/favicon.ico" type="image/x-icon"/>
+    <script src="../js/base.js"></script>
+</head>
+<body>
+{% include nav.html %}
+<h1 class="toc-ignore">欢迎来到Leo的网站</h1>
+<noscript>
+    <h2 class="toc-ignore">您的浏览器不支持JavaScript</h2>
+    <p>请启用JavaScript以获得更好的体验</p>
+</noscript>
+<div class="div-fixid" style="color: #ffff00; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const backToTopButton = document.getElementById("back-to-top");
+        backToTopButton.style.display = "none";
+
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 0) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        });
+
+        backToTopButton.addEventListener("click", function () {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        });
+    });
+
+    function changeBgText() {
+        const bgText = document.getElementById("bg-text");
+        if (bgText.style.display === "none") {
+            bgText.style.display = "block";
+        } else {
+            bgText.style.display = "none";
+        }
+    }
+
+    window.changeBgText = changeBgText;
+</script>
+{{ content }}
+{% include date.html %}
+<button id="back-to-top" class="back">↑</button>
+</body>
+</html>

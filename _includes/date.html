@@ -1,0 +1,21 @@
+<script src="../js/getDate.js"></script>
+<footer>
+<script>
+  document.write("<p id='time' style='position: fixed; bottom: 0; left: 0;'>当前时间: " + date() + "</p>");
+  setInterval(function() {
+    document.querySelector("p#time").innerHTML = "当前时间: " + date();
+  }, 1000);
+  document.write("<button id='time-btn' style='position: fixed; bottom: 15px; left: 320px; border: groove;'>隐藏时间</button>");
+  document.getElementById('time-btn').addEventListener('click', function() {
+      const timeParagraph = document.querySelector('p#time');
+      const timeButton = document.getElementById('time-btn');
+      if (timeParagraph.style.display === 'none') {
+          timeParagraph.style.display = 'block';
+          timeButton.textContent = '隐藏时间';
+      } else {
+          timeParagraph.style.display = 'none';
+          timeButton.textContent = '显示时间';
+      }
+  });
+</script>
+</footer>

@@ -1,102 +1,335 @@
 ---
 layout: default
+title: 文章广场
 ---
-<html lang="zh-cn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo's site</title>
-    <link type="text/css" rel="stylesheet" href="./style.css">
-    <link rel="icon" href="https://gitee.com/Leo-hele/pic-go-image/raw/master/hele.ico" type="image/x-icon" />
-    <!--script src="https://unpkg.com/simple-jekyll-search/dest/simple-jekyll-search.min.js"></script-->
-    <script src="{{ site.baseurl }}/js/simple-jekyll-search.min.js"></script>、
-</head>
-<body>
-<div style="color: #ffffff; user-select: none;">
-    <div style="color: #ffff00; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <strong style="font-size: 40px;">保持安静</strong>
+<style>
+    #search-input {
+        width: 90%;
+        margin-left: 20px;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.95);
+        border: groove #cccccc;
+        border-radius: 25px;
+        height: 50px;
+        font-size: 25px;
+        padding-left: 20px;
+    }
+
+    #search-class {
+        margin-left: 20px;
+        width: 90%;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.95);
+        border: groove #cccccc;
+        border-radius: 25px;
+        font-size: 25px;
+        padding-left: 20px;
+    }
+
+    #search {
+        display: none;
+    }
+
+    #search-button {
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        padding-top: 10px;
+        right: 0;
+    }
+
+    .class-select {
+        color: black;
+    }
+
+    li::marker {
+        display: none;
+        content: "";
+    }
+</style>
+<button id="showSearch-button">筛选器</button>
+<div id="search">
+    <div style="height: 50px;">
+        <input id="search-input" type="text" placeholder="搜索文章..."/>
+        <button onclick="updateSearch();" title="搜索" id="search-button">
+            <img src="https://gitee.com/Leo-hele/picGo-image/raw/master/搜索.png" alt="搜索"
+                 style="width: 50px; height: 50px;">
+        </button>
     </div>
-    <h1>Welcome to Leo's site</h1>
-    <h1>欢迎来到Leo的网站</h1>
-    <noscript>
-        <h2>您的浏览器不支持JavaScript</h2>
-        <p>请启用JavaScript以获得更好的体验</p>
-    </noscript>
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="查找文章……" style="width: 90%;
-    height: 35px;
-    color: #ffffff;
-    background-color: rgba(227,231,236,.2);
-    line-height: 35px;
-    margin-top: 20px;
-    padding:10px 16px;
-    border: 1px solid #c0c0c0;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 17px;
-    outline: none;
-    box-sizing: border-box;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);">
-        <ul id="results-container"></ul>
-    </div>
-    <script>
-        window.simpleJekyllSearch = new SimpleJekyllSearch({
-            searchInput: document.getElementById('search-input'),
-            resultsContainer: document.getElementById('results-container'),
-            json: '{{ site.baseurl }}/search.json',
-            searchResultTemplate: '<li><a href="{url}?query={query}" title="{desc}">{title}</a></li>',
-            noResultsText: 'No results found',
-            limit: 10,
-            fuzzy: false,
-            exclude: ['Welcome']
-        })
-    </script>
-
-    {% if site.posts.size == 0 %}
-    <h2>No post found</h2>
-    {% endif %}
-
-    <div class="posts">
-        {% for post in paginator.posts %}
-        {% unless post.draft %}
-        <article class="post">
-            <h1>
-                <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-            </h1>
-
-            <div class="meta">
-        <span class="date">
-          {{ post.date | date: "%Y-%m-%d" }}
-        </span>
-
-                <ul class="tag">
-                    {% for tag in post.tags %}
-                    <li>
-                        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
-                            {{ tag }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="entry">
-                {{ post.excerpt | truncate: 200 }}
-            </div>
-
-            <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-        </article>
-        {% endunless %}
-        {% endfor %}
-    </div>
-    <script>
-    // 显示当前时间
-        document.write("<p id='time' style='position: absolute; top: 90%; left: 0;'>当前时间: " + date() + "</p>");
-        // 每秒更新一次时间
-        setInterval(function() {
-            document.querySelector("p#time").innerHTML = "当前时间: " + date();
-        }, 1000);
-    </script>
+    <div id="search-class"></div>
 </div>
-</body>
-</html>
+<script src="../js/BlogsCmp.js"></script>
+<select id="cmp" onchange="updateSearch()">
+</select>
+<select id="key" onchange="updateSearch()">
+</select>
+<div id="search-container">
+    <p>加载中...</p>
+</div>
+<script>
+    function initSelect() {
+        const keySelect = document.getElementById("key");
+        const cmpSelect = document.getElementById("cmp");
+
+        // 清空现有选项
+        keySelect.innerHTML = '';
+        cmpSelect.innerHTML = '';
+
+        // 添加键选项
+        for (const key in Keys) {
+            const option = document.createElement("option");
+            option.value = key;
+            option.textContent = KeyNames[key];
+            keySelect.appendChild(option);
+        }
+
+        // 添加比较选项
+        for (const cmp in Cmps) {
+            const option = document.createElement("option");
+            option.value = cmp;
+            option.textContent = CmpNames[cmp];
+            cmpSelect.appendChild(option);
+        }
+    }
+    function ShowSearch() {
+        const search = document.getElementById("search");
+        const searchButton = document.getElementById("showSearch-button");
+        if (search.style.display === "none" || search.style.display === "") {
+            search.style.display = "block";
+            searchButton.innerHTML = "隐藏筛选器";
+        } else {
+            search.style.display = "none";
+            searchButton.innerHTML = "筛选器";
+        }
+        changeBgText();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("showSearch-button").addEventListener("click", ShowSearch);
+    });
+
+    function Check(checkbox) {
+        const childrenCheckboxes = checkbox.children[2].querySelectorAll('input');
+        let checkedCount = 0;
+        let uncheckedCount = 0;
+        childrenCheckboxes.forEach(child => {
+            if (child.checked) {
+                checkedCount++;
+            } else {
+                uncheckedCount++;
+            }
+        });
+        if (uncheckedCount === 0) {
+            return 1; // 全部未选中
+        } else if (checkedCount === 0) {
+            return 0; // 全部选中
+        } else {
+            return -1; // 部分选中
+        }
+    }
+
+    let checksClass = new Set();
+    window.checksClass = checksClass;
+
+    function loadSearch() {
+        return fetch("../search.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .catch(error => {
+                console.error('Error loading search data:', error);
+            });
+    }
+    async function updateSearch() {
+        const Key = Keys[document.getElementById("key").value];
+        const Cmp = Cmps[document.getElementById("cmp").value];
+        const blogs = await loadSearch();
+        console.log(checksClass);
+        const searchBlogs = [];
+        for (const blog of blogs) {
+            if (checksClass.has(blog.class)) {
+                searchBlogs.push(blog);
+            }
+        }
+        console.log(searchBlogs);
+        searchBlogs.sort((a, b) => {
+            return Cmp(Key(a), Key(b));
+        })
+        const searchContainer = document.getElementById("search-container");
+        searchContainer.innerHTML = ''; // 清空现有内容
+        if (searchBlogs.length === 0) {
+            searchContainer.innerHTML = '<p>没有找到符合条件的文章</p>';
+        }else{
+            searchBlogs.forEach(blog => {
+                const blogElement = document.createElement("div");
+                blogElement.className = "blog-item";
+                blogElement.innerHTML = `
+                    <h2><a href="${blog.url}">${blog.title}</a></h2>
+                    <p>分类: ${blog.class}</p>
+                    <p>日期: ${blog.date}</p>
+                `;
+                searchContainer.appendChild(blogElement);
+            });
+        }
+    }
+
+    function getClass(className) {
+        return className.replace("/所有分类", "");
+    }
+
+    function setOneCheckbox(checkbox, check) {
+        const inputElement = checkbox.querySelector('input');
+        const className = getClass(inputElement.id);
+        if (check) {
+            inputElement.checked = true;
+            inputElement.indeterminate = false; // 清除部分选中状态
+            if (checkbox.querySelectorAll('input').length === 1) {
+                checksClass.add(className);
+            }
+        } else {
+            inputElement.checked = false;
+            inputElement.indeterminate = false; // 清除部分选中状态
+            if (checksClass.has(className) && checkbox.querySelectorAll('input').length === 1) {
+                checksClass.delete(className);
+            }
+        }
+    }
+
+    function updateAncestorCheckboxes(checkbox) {
+        const parentCheckbox = checkbox.parentElement.parentElement.parentElement;
+        if (checkbox === document.getElementById("search-class")) {
+            return; // 如果是顶层元素，则不处理
+        }
+        const check = Check(checkbox);
+        const inputElement = checkbox.querySelector('input');
+        if (check === 0) {
+            inputElement.checked = false;
+            inputElement.indeterminate = false;
+        } else if (check === 1) {
+            inputElement.checked = true;
+            inputElement.indeterminate = false;
+        } else {
+            inputElement.indeterminate = true;
+            inputElement.checked = false; // 部分选中状态时，保持未选中
+        }
+        updateAncestorCheckboxes(parentCheckbox);
+    }
+    function Option(class_, base_class) {
+        base_class += "/" + class_.name;
+        let alloptions = document.createElement("div");
+        let optionInput = document.createElement("input");
+        optionInput.type = "checkbox";
+        optionInput.checked = "";
+        optionInput.value = base_class;
+        optionInput.id = base_class;
+        alloptions.appendChild(optionInput);
+        let optionLabel = document.createElement("label");
+        optionLabel.className = "class-select";
+        optionLabel.for = base_class;
+        optionLabel.textContent = class_.name;
+        const children = class_.children;
+        let children_list = document.createElement("ul");
+        for (let i in children) {
+            const class_ = children[i];
+            let children_option = document.createElement("li");
+            children_option.appendChild(Option(class_, base_class));
+            children_list.appendChild(children_option);
+        }
+        alloptions.appendChild(optionLabel);
+        // 保存子节点原始状态
+        const childStates = new WeakMap();
+
+        optionInput.addEventListener('change', e => {
+            // 更新所有子节点
+            const checkboxes = children_list.querySelectorAll('input');
+            if (e.target.checked) {
+                // 保存子节点原始状态
+                checkboxes.forEach(child => {
+                    childStates.set(child, child.checked);
+                    setOneCheckbox(child.parentElement, 1);
+                });
+                e.target.dataChecked = true; // 标记为已选中
+            } else {
+                if (Check(e.target.parentElement) === 1 && e.target.dataChecked === false) {
+                    checkboxes.forEach(child => {
+                        // 如果父节点是全选状态，保存子节点原始状态
+                        childStates.set(child, false);
+                    })
+                }
+                // 恢复子节点原始状态
+                checkboxes.forEach(child => {
+                    const prevState = childStates.get(child);
+                    if (prevState !== undefined) {
+                        setOneCheckbox(child.parentElement, prevState);
+                    }
+                });
+                e.target.dataChecked = false; // 标记为未选中
+            }
+            if (checkboxes.length === 0) {
+                setOneCheckbox(e.target.parentElement, e.target.checked);
+            }
+            // 更新祖先节点
+            updateAncestorCheckboxes(e.target.parentElement);
+            updateSearch();
+        });
+        alloptions.appendChild(children_list);
+        return alloptions;
+    }
+
+    function getClasses() {
+        return loadSearch().then(posts => {
+            // 创建分类树结构
+            const classTree = {name: "所有分类", children: []};
+
+            posts.forEach(post => {
+                const classPath = post.class.split('/').filter(Boolean);
+                let currentLevel = classTree.children;
+
+                classPath.forEach(className => {
+                    let existingNode = currentLevel.find(node => node.name === className);
+                    if (!existingNode) {
+                        existingNode = {name: className, children: []};
+                        currentLevel.push(existingNode);
+                    }
+                    currentLevel = existingNode.children;
+                });
+            });
+
+            return classTree;
+        })
+    }
+    // 修改InitSelect中的调用方式
+    async function InitSelect() {
+        const classes = await getClasses();
+        const select = document.getElementById("search-class");
+        select.innerHTML = '';
+        const ul = document.createElement("ul");
+        select.appendChild(ul);
+        const li = document.createElement("li");
+        const option = Option(classes, "");
+        window.onload = () => {
+            delay(500).then(() => {
+                option.children[0].click();
+            }).then(() => {
+                updateSearch();
+            });
+        };
+        li.appendChild(option);
+        ul.appendChild(li);
+    }
+
+    document.addEventListener('DOMContentLoaded', InitSelect);
+    document.addEventListener('DOMContentLoaded', initSelect);
+    document.getElementById("search-input").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            updateSearch();
+        }
+    });
+</script>

@@ -1,19 +1,21 @@
 ---
 layout: page
-title: About
+title: 关于
 permalink: /about/
+date: 2025-7-24
+author: Leo
+email: hele199380@hotmail.com
 ---
 
-##欢迎来到Leo的网站！
+## 欢迎来到Leo的网站！
 
 ## 这里是关于页
 
 ### 代码、博客遵循以下协议
 
-![许可证](https://gitee.com/Leo-hele/pic-go-image/raw/master/license.png)
+![许可证](https://gitee.com/Leo-hele/picGo-image/raw/master/license.png)
 
 ### 作者信息
-
 #### 网站
 
 - [github](https://github.com/Leo-hele)
