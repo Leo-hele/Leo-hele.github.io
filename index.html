@@ -1,328 +1,41 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<! doctype html>
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>代码与博客导航</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
-        }
-        header {
-            grid-column: 1 / -1;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        nav {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        main {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-        }
-        h1 {
-            margin: 0;
-        }
-        h2 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        .tab-container {
-            margin-bottom: 20px;
-        }
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-        }
-        .tab.active {
-            background-color: white;
-            border-bottom: 1px solid white;
-            margin-bottom: -1px;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .file-list, .post-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .file-item, .post-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .file-item:last-child, .post-item:last-child {
-            border-bottom: none;
-        }
-        .file-link, .post-link {
-            color: #3498db;
-            text-decoration: none;
-            display: block;
-            padding: 5px;
-            border-radius: 3px;
-        }
-        .file-link:hover, .post-link:hover {
-            background-color: #f0f7fd;
-        }
-        .folder {
-            font-weight: bold;
-            color: #e67e22;
-        }
-        .file-icon {
-            margin-right: 8px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: #7f8c8d;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            color: #3498db;
-        }
-        .post-meta {
-            font-size: 0.9em;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-        #blogContent {
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        #blogContent img {
-            max-width: 100%;
-        }
-        #blogContent pre {
-            background-color: #f5f5f5;
-            padding: 10px;
-            border-radius: 3px;
-            overflow-x: auto;
-        }
-        #blogContent code {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f5f5f5;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-    </style>
-    <!-- 引入Markdown解析库 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- 引入代码高亮 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/lib/highlight.min.js"></script>
-    <script>
-        // 实现 showTab 函数
-        function showTab(tabId) {
-            // 隐藏所有标签页内容
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            // 移除所有标签的 active 类
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // 显示当前标签页内容
-            document.getElementById(tabId).classList.add('active');
-            // 激活当前标签
-            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
-        }
-    </script>
+    <title>Leo's site</title>
+    <link type="text/css" rel="stylesheet" href="./style.css">
+    <link rel="icon" href="https://gitee.com/Leo-hele/pic-go-image/raw/master/hele.ico" type="image/x-icon" />
+    <script src="./js/getDate.js"></script>
 </head>
 <body>
-    <header>
-        <h1>我的开发空间</h1>
-        <p>代码项目与个人博客</p>
-    </header>
+    <div style="color: #ffffff; user-select: none;">
+        <div style="color: #ffff00; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <strong style="font-size: 40px;">保持安静</strong>
+        </div>
+        <h1>Welcome to Leo's site</h1>
+        <h1>欢迎来到Leo的网站</h1>
+        <noscript>
+            <h2>您的浏览器不支持JavaScript</h2>
+            <p>请启用JavaScript以获得更好的体验</p>
+        </noscript>
 
-    <div class="container">
-        <nav>
-            <h2>导航</h2>
-            <ul>
-                <li><a href="#" onclick="showTab('code')" class="tab-link">代码项目</a></li>
-                <li><a href="#" onclick="showTab('blog')" class="tab-link">个人博客</a></li>
-            </ul>
-        </nav>
-
-        <main>
-            <div class="tab-container">
-                <div class="tabs">
-                    <div class="tab active" data-tab="code">代码项目</div>
-                    <div class="tab" data-tab="blog">个人博客</div>
-                </div>
-
-                <!-- 代码项目标签页 -->
-                <div id="code" class="tab-content active">
-                    <!-- 移除多余的 <div class="tab active" data-tab="code"> -->
-                    <h2>代码文件</h2>
-                    <p>以下是我编写的代码：</p>
-                    <ul class="file-list" id="fileList">
-                        <!-- 文件列表将通过JavaScript动态生成 -->
-                    </ul>
-                </div>
-
-                <!-- 博客标签页 -->
-                <div id="blog" class="tab-content">
-                    <!-- 移除多余的 <div class="tab active" data-tab="code"> -->
-                    <h2>博客文章</h2>
-                    <p>以下是我编写的文章</p>
-                    <a href="https://www.luogu.com.cn/user/1068806#article">跳转到个人洛谷</a>
-                    <ul class="post-list" id="postList">
-                        <!-- 文章列表将通过JavaScript动态生成 -->
-                    </ul>
-                    <div id="blogContent"></div>
-                </div>
-            </div>
-        </main>
+        <script>
+            // 显示当前时间
+            document.write("<p id='time' style='position: absolute; top: 90%; left: 0;'>当前时间: " + date() + "</p>");
+            // 每秒更新一次时间
+            setInterval(function() {
+                document.querySelector("p#time").innerHTML = "当前时间: " + date();
+            }, 1000);
+        </script>
+        <ul>
+            <li>
+                <a href="./programs.html">我的代码</a>
+            </li>
+            <li>
+                <a href="./blogs.html">我的文章</a>
+            </li>
+        </ul>
     </div>
-
-    <!-- 在之前的HTML文件中，替换JavaScript部分为： -->
-<script>
-    // 当前路径
-    let currentCodePath = './_programs';
-    let currentBlogPath = './_posts';
-    
-    // 页面加载时显示默认内容
-    window.onload = function() {
-        loadFileList(currentCodePath);
-        loadPostList();
-        hljs.highlightAll();
-    };
-    
-    // 加载文件列表的函数
-    async function loadFileList(path) {
-        try {
-            const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`);
-            const files = await response.json();
-            
-            const fileListElement = document.getElementById('fileList');
-            fileListElement.innerHTML = '';
-            
-            // 如果不是根目录，添加返回上一级链接
-            if (path !== './_programs') {
-                const parentPath = path.substring(0, path.lastIndexOf('/'));
-                const backItem = document.createElement('li');
-                backItem.className = 'file-item';
-                backItem.innerHTML = `
-                    <a href="javascript:void(0)" onclick="loadFileList('${parentPath}')" class="file-link">
-                        <span class="file-icon">↩</span> 返回上一级
-                    </a>
-                `;
-                fileListElement.appendChild(backItem);
-            }
-            
-            // 先添加文件夹
-            files.filter(file => file.isDirectory).forEach(file => {
-                const listItem = document.createElement('li');
-                listItem.className = 'file-item';
-                listItem.innerHTML = `
-                    <a href="javascript:void(0)" onclick="loadFileList('${file.path}')" class="file-link folder">
-                        <span class="file-icon">📁</span> ${file.name}/
-                    </a>
-                `;
-                fileListElement.appendChild(listItem);
-            });
-            
-            // 再添加文件
-            files.filter(file => file.isFile).forEach(file => {
-                const listItem = document.createElement('li');
-                listItem.className = 'file-item';
-                listItem.innerHTML = `
-                    <a href="${file.path}" class="file-link" target="_blank">
-                        <span class="file-icon">📄</span> ${file.name}
-                    </a>
-                `;
-                fileListElement.appendChild(listItem);
-            });
-        } catch (error) {
-            console.error('加载文件列表出错:', error);
-            alert('无法加载文件列表，请确保服务器正在运行。');
-        }
-    }
-    
-    // 加载博客文章列表的函数
-    async function loadPostList() {
-        try {
-            const response = await fetch('/api/posts');
-            const posts = await response.json();
-            
-            const postListElement = document.getElementById('postList');
-            postListElement.innerHTML = '';
-            
-            posts.forEach(post => {
-                const listItem = document.createElement('li');
-                listItem.className = 'post-item';
-                listItem.innerHTML = `
-                    <a href="javascript:void(0)" onclick="loadPostContent('${post.path}')" class="post-link">
-                        ${post.name.replace('.md', '')}
-                    </a>
-                `;
-                postListElement.appendChild(listItem);
-            });
-        } catch (error) {
-            console.error('加载文章列表出错:', error);
-            alert('无法加载文章列表，请确保服务器正在运行。');
-        }
-    }
-    
-    // 加载博客文章内容的函数
-    async function loadPostContent(postPath) {
-        try {
-            const response = await fetch(`/api/post?path=${encodeURIComponent(postPath)}`);
-            const post = await response.json();
-            
-            document.getElementById('blogContent').innerHTML = post.content;
-            
-            // 重新高亮代码块
-            document.querySelectorAll('pre code').forEach(block => {
-                hljs.highlightElement(block);
-            });
-            
-            // 滚动到内容区域
-            document.getElementById('blogContent').scrollIntoView({ behavior: 'smooth' });
-        } catch (error) {
-            console.error('加载文章内容出错:', error);
-            document.getElementById('blogContent').innerHTML = '<p>无法加载文章内容。</p>';
-        }
-    }
-</script>
 </body>
 </html>
