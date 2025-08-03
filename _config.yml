@@ -4,8 +4,6 @@ nav:
     link: /
   - name: 关于
     link: /about/
-  - name: 程序
-    link: /programs/
   - name: 文章
     link: /blogs/
 other-urls:
@@ -21,4 +19,4 @@ usersNum: 1
 users:
   - name: Leo
     url: https://leo-hele.github.io/
-    password: Nooooooo
+    password: noPassword

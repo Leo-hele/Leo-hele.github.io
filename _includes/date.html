@@ -6,7 +6,7 @@
     document.querySelector("p#time").innerHTML = "当前时间: " + date();
   }, 1000);
   document.write("<button id='time-btn' style='position: fixed; bottom: 15px; left: 320px; border: groove;'>隐藏时间</button>");
-  document.getElementById('time-btn').addEventListener('click', function() {
+  function changeTime() {
       const timeParagraph = document.querySelector('p#time');
       const timeButton = document.getElementById('time-btn');
       if (timeParagraph.style.display === 'none') {
@@ -14,7 +14,14 @@
           timeButton.textContent = '隐藏时间';
       } else {
           timeParagraph.style.display = 'none';
-          timeButton.textContent = '显示时间';
+          timeButton.textContent = "显示时间";
+          timeButton.style.display = 'none';
+      }
+  }
+  document.getElementById('time-btn').addEventListener('click', function() {
+      changeTime();
+      if (this.style.display === 'none') {
+          this.style.display = 'block';
       }
   });
 </script>

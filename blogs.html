@@ -50,6 +50,15 @@ title: 文章广场
         display: none;
         content: "";
     }
+
+    .blog-item {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        color: black;
+    }
 </style>
 <button id="showSearch-button">筛选器</button>
 <div id="search">
@@ -71,6 +80,8 @@ title: 文章广场
     <p>加载中...</p>
 </div>
 <script>
+    changeBgText();
+    changeTime();
     function initSelect() {
         const keySelect = document.getElementById("key");
         const cmpSelect = document.getElementById("cmp");
@@ -105,7 +116,6 @@ title: 文章广场
             search.style.display = "none";
             searchButton.innerHTML = "筛选器";
         }
-        changeBgText();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -151,15 +161,14 @@ title: 文章广场
         const Key = Keys[document.getElementById("key").value];
         const Cmp = Cmps[document.getElementById("cmp").value];
         const blogs = await loadSearch();
-        console.log(checksClass);
         const searchBlogs = [];
         for (const blog of blogs) {
             if (checksClass.has(blog.class)) {
                 searchBlogs.push(blog);
             }
         }
-        console.log(searchBlogs);
         searchBlogs.sort((a, b) => {
+            // console.log(a, b, Key(a), Key(b), Cmp(Key(a), Key(b)));
             return Cmp(Key(a), Key(b));
         })
         const searchContainer = document.getElementById("search-container");
@@ -314,15 +323,13 @@ title: 文章广场
         select.appendChild(ul);
         const li = document.createElement("li");
         const option = Option(classes, "");
-        window.onload = () => {
-            delay(500).then(() => {
-                option.children[0].click();
-            }).then(() => {
-                updateSearch();
-            });
-        };
         li.appendChild(option);
         ul.appendChild(li);
+        option.addEventListener("load", () => {
+            console.log("分类加载完成");
+            option.children[0].click();
+            delay(500).then(updateSearch);
+        });
     }
 
     document.addEventListener('DOMContentLoaded', InitSelect);

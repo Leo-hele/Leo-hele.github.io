@@ -1,10 +1,11 @@
+const time = new Date().getTime();
 function KeyName(blog) {
     let tmp = 0;
     const maxChar = 1000000;
     for (const i of blog.title.toLowerCase()){
         tmp += (maxChar - i.charCodeAt(0)) * maxChar;
     }
-    return tmp / pow(maxChar, blog.title.length);
+    return tmp / Math.pow(maxChar, blog.title.length);
 }
 function KeyClass(blog) {
     let tmp = 0;
@@ -12,12 +13,11 @@ function KeyClass(blog) {
     for (const i of blog.class.toLowerCase()){
         tmp += (maxChar - i.charCodeAt(0)) * maxChar;
     }
-    return tmp / pow(maxChar, blog.title.length);
+    return tmp / Math.pow(maxChar, blog.class.length);
 }
 function KeyDate(blog) {
     const date = new Date(blog.date);
-    console.log(date.getTime());
-    return date.getTime() / new Date().getTime(); // Normalize to a smaller range
+    return date.getTime() / time; // Normalize to a smaller range
 }
 function Jaccard(a, b) {
     const setA = new Set(a.split(/\s+/).map(word => word.toLowerCase()));
@@ -73,19 +73,19 @@ function CosineSimilarity(a, b) {
 function KeyCorrelation(Similarity) {
     return (blog) => {
         const searchInput = document.getElementById("search-input").value.toLowerCase();
-        return Similarity(blog.title, searchInput);
+        return 1 - Similarity(blog.title, searchInput);
     };
 }
 function KeyHot(blog) {
     return blog.hot;
 }
 function KeyAll(blog) {
-    return KeyName(blog) * 0 + KeyClass(blog) * 0 + KeyDate(blog) * 3 + KeyCorrelation(Levenshtein)(blog) * 5 + KeyHot(blog) * 3;
+    return KeyName(blog) * 0 + KeyClass(blog) * 0 + KeyDate(blog) * 1 + KeyCorrelation(Levenshtein)(blog) * 7 + KeyHot(blog) * 4;
 }
-function CmpLess(a, b){return a < b;}
-function CmpGreater(a, b){return a > b;}
+function CmpLess(a, b){return a - b;}
+function CmpGreater(a, b){return b - a;}
 let Keys = [KeyAll, KeyName, KeyClass, KeyDate, KeyHot];
-let KeyNames = ["智能排序", "标题", "分类", "日期", "热度"];
+let KeyNames = ["智能排序（0×标题+0×分类+1×日期+7×相关性 Levenshtein+4×热度）", "标题", "分类", "日期", "热度"];
 let Cmps = [CmpGreater, CmpLess];
 let CmpNames = ["降序", "升序"];
 let SimilarityNames = ["Jaccard", "Dice", "Levenshtein", "Hamming", "Cosine"];
