@@ -330,6 +330,11 @@ title: 文章广场
             option.children[0].click();
             delay(500).then(updateSearch);
         });
+        document.getElementById("search-class").querySelector("input").addEventListener("l", (e) => {
+            console.log("分类加载完成");
+            e.target.click();
+            delay(500).then(updateSearch);
+        });
     }
 
     document.addEventListener('DOMContentLoaded', InitSelect);
