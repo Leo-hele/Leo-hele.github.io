@@ -1,9 +1,9 @@
-function delay(time) {
+export function delay(time) {
     return new Promise(resolve => {
         setTimeout(resolve, time);
     });
 }
-function loadJson(url) {
+export function loadJson(url) {
     return fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -16,7 +16,7 @@ function loadJson(url) {
             throw error;
         });
 }
-function loadFile(url) {
+export function loadFile(url) {
     return fetch(url)
         .then(response => {
             if (!response.ok) {
