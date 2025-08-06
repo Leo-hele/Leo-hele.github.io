@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正在跳转……</title>
+</head>
+<body>
+<script>
+    const a = document.createElement("a");
+    const searches = window.location.search
+    const params = new URLSearchParams(searches);
+    const url = params.get("url");
+    if (url) {
+        // 如果有指定的 URL，则跳转到该 URL
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            a.href = "https://" + url;
+        } else {
+            // 如果 URL 已经是完整的链接，则直接使用
+            a.href = url;
+        }
+    }else {
+        a.href = window.location.href.replace("{{ site.url }}", "");
+    }
+    a.click();
+</script>
+</body>
+</html>

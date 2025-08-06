@@ -49,7 +49,29 @@
     window.changeBgText = changeBgText;
 </script>
 {% include date.html %}
-{{ content }}
+<div id="body-content">
+    {{ content }}
+</div>
 <button id="back-to-top" class="back">↑</button>
 </body>
+<script src="../js/translate.js"></script>
+<script>
+    translate.service.use('client.edge');
+    const user_language = navigator.language;
+    translate.language.setDefaultTo(user_language); //设置默认翻译为的语种
+    translate.language.setLocal(user_language);
+    translate.listener.start();
+    translate.selectLanguageTag.show = true;
+    translate.execute();
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.getElementById('translateSelectLanguage');
+        select.addEventListener('mouseenter', function () {
+            select.multiple = "multiple";
+            console.log("click");
+        })
+        select.addEventListener('mouseleave', function () {
+            select.multiple = "";
+        })
+    })
+</script>
 </html>

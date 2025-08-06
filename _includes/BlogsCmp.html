@@ -1,0 +1,130 @@
+<script type="module">
+    import {pinyin} from "../js/pinyin-pro/dist/index.mjs";
+
+    // 拼音转换函数
+    function getPinyin(text, options = {}) {
+        const defaultOptions = {
+            toneType: 'none',
+            pattern: 'pinyin',
+            type: 'array',
+            multiple: true,
+            removeNonZh: false
+        };
+
+        try {
+            const result = pinyin(text, { ...defaultOptions, ...options });
+            return Array.isArray(result) ? result.join('\0') : result;
+        } catch (error) {
+            console.error('拼音转换出错:', error);
+            return text;
+        }
+    }
+    window.getPinyin = getPinyin;
+</script>
+<script>
+    function getPinyinKey(str) {
+        const title = getPinyin(str);
+        let tmp = 0;
+        const maxChar = 128;
+        for (const i in title){
+            tmp += title[i].charCodeAt(0) * Math.pow(maxChar, -i-1);
+        }
+        return tmp;
+    }
+    const time = new Date().getTime();
+    function KeyName(blog) {
+        return getPinyinKey(blog.title);
+    }
+    function KeyClass(blog) {
+        return getPinyinKey(blog.class);
+    }
+    function KeyDate(blog) {
+        const date = new Date(blog.date);
+        return date.getTime() / time; // Normalize to a smaller range
+    }
+    function Jaccard(a, b) {
+        const setA = new Set(a.split(/\s+/).map(word => word.toLowerCase()));
+        const setB = new Set(b.split(/\s+/).map(word => word.toLowerCase()));
+        const intersection = new Set([...setA].filter(x => setB.has(x)));
+        const union = new Set([...setA, ...setB]);
+        return intersection.size / union.size;
+    }
+    function Dice(a, b) {
+        const setA = new Set(a.split(/\s+/).map(word => word.toLowerCase()));
+        const setB = new Set(b.split(/\s+/).map(word => word.toLowerCase()));
+        const intersection = new Set([...setA].filter(x => setB.has(x)));
+        return (2 * intersection.size) / (setA.size + setB.size);
+    }
+    function Levenshtein(a, b) {
+        const m = a.length;
+        const n = b.length;
+        console.log(n, m);
+        const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+        console.log(dp);
+        for (let i = 0; i <= m; i++) {
+            dp[i][0] = i;
+        }
+        for (let j = 0; j <= n; j++) {
+            dp[0][j] = j;
+        }
+        for (let i = 1; i <= m; i++) {
+            for (let j = 1; j <= n; j++) {
+                if (a[i - 1] === b[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1;
+                }
+            }
+        }
+        return 1 - dp[m][n] / Math.max(m, n);
+    }
+    function Hamming(a, b) {
+        let distance = 0;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) {
+                distance++;
+            }
+        }
+        return 1 - distance / Math.max(a.length, b.length);
+    }
+    function CosineSimilarity(a, b) {
+        const vectorA = a.split(/\s+/).map(word => word.toLowerCase());
+        const vectorB = b.split(/\s+/).map(word => word.toLowerCase());
+        const setA = new Set(vectorA);
+        const setB = new Set(vectorB);
+        const intersection = new Set([...setA].filter(x => setB.has(x)));
+        return intersection.size / Math.sqrt(setA.size * setB.size);
+    }
+    function KeyCorrelation(Similarity) {
+        return (blog) => {
+            const searchInput = document.getElementById("search-input").value.toLowerCase();
+            if (!searchInput) {
+                return 0; // No search input, return 0 correlation
+            }
+            let title = blog.title.toLowerCase();
+            if (document.getElementById("search-input-contents").checked) {
+                title += loadFile(blog.url).toLowerCase();
+            }
+            return Similarity(title, searchInput);
+        };
+    }
+    function KeyHot(blog) {
+        return blog.hot;
+    }
+    function KeyAll(blog) {
+        return KeyCorrelation(Levenshtein)(blog) * 7 + KeyHot(blog) * 4;
+    }
+    function CmpLess(a, b){return a - b;}
+    function CmpGreater(a, b){return b - a;}
+    let Keys = [KeyAll, KeyName, KeyClass, KeyDate, KeyHot];
+    let KeyNames = ["智能排序（0×标题+0×分类+0×日期+7×相关性 Levenshtein+4×热度）", "标题", "分类", "日期", "热度"];
+    let Cmps = [CmpGreater, CmpLess];
+    let CmpNames = ["降序", "升序"];
+    let SimilarityNames = ["Jaccard", "Dice", "Levenshtein", "Hamming", "Cosine"];
+    let Similarities = [Jaccard, Dice, Levenshtein, Hamming, CosineSimilarity];
+
+    for (let i in Similarities){
+        Keys.push(KeyCorrelation(Similarities[i]));
+        KeyNames.push("相关性 " + SimilarityNames[i]);
+    }
+</script>

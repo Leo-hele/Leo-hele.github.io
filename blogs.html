@@ -4,7 +4,7 @@ title: 文章广场
 ---
 <style>
     #search-input {
-        width: 90%;
+        width: 70%;
         margin-left: 20px;
         z-index: 1000;
         background-color: rgba(255, 255, 255, 0.95);
@@ -68,10 +68,12 @@ title: 文章广场
             <img src="https://gitee.com/Leo-hele/picGo-image/raw/master/搜索.png" alt="搜索"
                  style="width: 50px; height: 50px;">
         </button>
+        <input id="search-input-contents" type="checkbox" onclick="updateSearch();"/>
+        <label for="search-input-contents">搜索内容</label>
     </div>
     <div id="search-class"></div>
 </div>
-<script src="../js/BlogsCmp.js"></script>
+{% include BlogsCmp.html %}
 <select id="cmp" onchange="updateSearch()">
 </select>
 <select id="key" onchange="updateSearch()">
@@ -80,9 +82,32 @@ title: 文章广场
     <p>加载中...</p>
 </div>
 <script>
+    async function translate_text(text, targetLang = 'zh') {
+        try {
+            const res = await fetch("https://libretranslate.com/translate", {
+                method: "POST",
+                body: JSON.stringify({
+                    q: "",
+                    source: "auto",
+                    target: targetLang,
+                    format: text,
+                    alternatives: 3,
+                    api_key: ""
+                }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            let data = await res.json();
+            console.log(data);
+            return data;
+        } catch (error) {
+            console.error('翻译失败:', error);
+            return text;
+        }
+    }
     changeBgText();
     changeTime();
-    function initSelect() {
+    function InitSort() {
         const keySelect = document.getElementById("key");
         const cmpSelect = document.getElementById("cmp");
 
@@ -116,6 +141,7 @@ title: 文章广场
             search.style.display = "none";
             searchButton.innerHTML = "筛选器";
         }
+        translate.execute();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -146,16 +172,7 @@ title: 文章广场
     window.checksClass = checksClass;
 
     function loadSearch() {
-        return fetch("../search.json")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .catch(error => {
-                console.error('Error loading search data:', error);
-            });
+        return loadJson("../search.json");
     }
     async function updateSearch() {
         const Key = Keys[document.getElementById("key").value];
@@ -164,11 +181,12 @@ title: 文章广场
         const searchBlogs = [];
         for (const blog of blogs) {
             if (checksClass.has(blog.class)) {
+                blog.title = translate_text(blog.title, document.getElementById('translateSelectLanguage').value);
                 searchBlogs.push(blog);
             }
         }
         searchBlogs.sort((a, b) => {
-            // console.log(a, b, Key(a), Key(b), Cmp(Key(a), Key(b)));
+            // console.log(a, b, Key(a), Key(b), Cmp(Key(a), Key(b)), Key, Cmp);
             return Cmp(Key(a), Key(b));
         })
         const searchContainer = document.getElementById("search-container");
@@ -187,6 +205,7 @@ title: 文章广场
                 searchContainer.appendChild(blogElement);
             });
         }
+        translate.execute();
     }
 
     function getClass(className) {
@@ -314,6 +333,10 @@ title: 文章广场
             return classTree;
         })
     }
+    function initSearch(select) {
+        select.querySelector("input").click();
+        delay(500).then(updateSearch);
+    }
     // 修改InitSelect中的调用方式
     async function InitSelect() {
         const classes = await getClasses();
@@ -325,20 +348,11 @@ title: 文章广场
         const option = Option(classes, "");
         li.appendChild(option);
         ul.appendChild(li);
-        option.addEventListener("load", () => {
-            console.log("分类加载完成");
-            option.children[0].click();
-            delay(500).then(updateSearch);
-        });
-        document.getElementById("search-class").querySelector("input").addEventListener("l", (e) => {
-            console.log("分类加载完成");
-            e.target.click();
-            delay(500).then(updateSearch);
-        });
+        initSearch(select);
     }
 
     document.addEventListener('DOMContentLoaded', InitSelect);
-    document.addEventListener('DOMContentLoaded', initSelect);
+    InitSort();
     document.getElementById("search-input").addEventListener("keydown", e => {
         if (e.key === "Enter") {
             updateSearch();

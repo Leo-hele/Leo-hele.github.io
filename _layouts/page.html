@@ -241,4 +241,10 @@ layout: default
 </script>
 <script>
     window.downloadCode = downloadCode;
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("a").forEach((item) => {
+            const url = item.href;
+            item.href = "{{ site.baseurl }}/link.html?url=" + url;
+        })
+    })
 </script>
