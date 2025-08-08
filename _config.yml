@@ -14,7 +14,7 @@ other-urls:
   - name: 洛谷
     link: https://www.luogu.com.cn/user/1068806/
 baseurl: ""
-url: ""
+url: "localhost:4000"
 usersNum: 1
 users:
   - name: Leo

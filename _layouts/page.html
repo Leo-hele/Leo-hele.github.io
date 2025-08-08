@@ -1,22 +1,46 @@
 ---
 layout: default
 ---
+<script src="../js/download.js" type="module"></script>
 <script>
     document.addEventListener("DOMContentLoaded", changeBgText);
 </script>
 <link rel="dns-prefetch" href="//cdn.mathjax.org" xmlns="http://www.w3.org/1999/html"/>
 <link rel="stylesheet" href="../prism.css"/>
-<script src="../js/download.js"></script>
 <style>
+    .toc-container {
+        position: fixed;
+        left: 80%;
+        max-width: 20%;
+        max-height: calc(100% - 90px);
+        overflow: auto;
+        top: calc((100% - 90px) / 2);
+        transform: translateY(-50%);
+    }
+    * {
+        max-width:100%;
+    }
     .toc-container ul {
         list-style: none;
-        padding-left: 40px;
+        padding-left: 20px;
     }
 
     .toc-container li {
         margin: 5px 0;
     }
+
+    .page {
+        max-width: 80%;
+    }
+
+    pre {
+        max-width: 90%;
+    }
 </style>
+<div class="toc-container">
+    <h1>目录</h1>
+    <div id="toc"></div>
+</div>
 <article class="page">
     <p>
     <h1 class="toc-ignore">{{ page.title }}</h1>
@@ -46,205 +70,205 @@ layout: default
             href="mailto:{{ page.email }}?subject=suggestion">contact the author</a>. Thank you!
     </div>
     <hr/>
-    <h1 class="toc-ignore">目录</h1>
-    <div id="toc" class="toc-container" style="display: none"></div>
-    <hr/>
     <div id="md-file">
         {{ content }}
     </div>
-    <script>
-        function Query(className) {
-            const mdfile = document.getElementById("md-file");
-            const elements = mdfile.querySelectorAll(`${className}`);
-            return elements;
-        }
+</article>
+<script>
+    function Query(className) {
+        const mdfile = document.getElementById("md-file");
+        const elements = mdfile.querySelectorAll(`${className}`);
+        return elements;
+    }
 
-        function doSe(className, callback) {
-            let elements = Query(className);
-            if (elements === null) return;
-            elements.forEach((element) => {
-                callback(element);
-            });
-        }
+    function doSe(className, callback) {
+        let elements = Query(className);
+        if (elements === null) return;
+        elements.forEach((element) => {
+            callback(element);
+        });
+    }
 
-        function new_innerHTML(parent, callback, addtag = true) {
-            let tag = ["", ""];
-            if (addtag) {
-                tag = parent.outerHTML.split(parent.innerHTML);
+    function new_innerHTML(parent, callback, addtag = true) {
+        let tag = ["", ""];
+        if (addtag) {
+            tag = parent.outerHTML.split(parent.innerHTML);
+        }
+        let new_inner = tag[0];
+        const children = parent.childNodes;
+        const noTag = ['A', 'CODE', 'PRE', 'SPAN', 'P', 'DIV'];
+
+        children.forEach((celement) => {
+            let element = celement;
+            if ("tagName" in element && noTag.includes(element.tagName.toUpperCase())) {
+                element.className += " " + 'heading-aa';
+                new_inner += element.outerHTML;
+            } else if (element.children) {
+                new_inner += new_innerHTML(element, callback);
+            } else {
+                new_inner += callback(element);
             }
-            let new_inner = tag[0];
-            const children = parent.childNodes;
-            const noTag = ['A', 'CODE', 'PRE', 'SPAN', 'P', 'DIV'];
+        });
+        new_inner += tag[1];
+        return new_inner;
+    }
 
-            children.forEach((celement) => {
-                let element = celement;
-                if ("tagName" in element && noTag.includes(element.tagName.toUpperCase())) {
-                    element.className += " " + 'heading-aa';
-                    new_inner += element.outerHTML;
-                } else if (element.children) {
-                    new_inner += new_innerHTML(element, callback);
-                } else {
-                    new_inner += callback(element);
+    function generateTOC() {
+        const headings = Array.from(Query("h1, h2, h3, h4, h5, h6"))
+            .filter(heading => heading.className !== 'toc-ignore')
+            .map((heading, index) => {
+                // 增强ID生成安全性
+                let id = heading.textContent;
+                id += `-heading${index}`;
+                heading.id = id;
+                return heading;
+            });
+
+        const tocContainer = document.getElementById('toc');
+        let currentLevel = 1;
+        let tocHTML = '<ul style="padding-left: 0">';
+        headings.forEach((cheading, index) => {
+                let heading = cheading;
+                const id = cheading.id;
+                heading.innerHTML = new_innerHTML(heading, (element) => {
+                    const text = `<a href="#${id}" class="heading-a">${element.textContent}</a>`;
+                    return text;
+                }, false);
+                const level = parseInt(heading.tagName.substring(1));
+
+                // 修复标签闭合逻辑
+                if (level > currentLevel) {
+                    tocHTML += '<ul>'.repeat(level - currentLevel);
+                } else if (level < currentLevel) {
+                    tocHTML += '</li></ul>'.repeat(currentLevel - level);
+                } else if (index !== 0) {
+                    tocHTML += '</li>';
+                }
+
+                tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a>`;
+                currentLevel = level;
+            }
+        );
+
+        // 闭合最后未关闭的标签
+        tocHTML += '</li></ul>';
+        tocContainer.innerHTML = tocHTML;
+        tocContainer.style.display = 'block';
+
+        window.addEventListener('scroll', () => {
+            const links = tocContainer.querySelectorAll('a');
+            links.forEach(link => {
+                if (link.className !== 'heading-a') return;
+                const hash = link.getAttribute('href') || '';
+                const id = hash.startsWith('#') ? hash.slice(1) : null;
+
+                const heading = document.getElementById(id);
+                if (!heading) {
+                    console.warn('找不到对应标题:', id, '链接文本:', link.textContent);
+                    return;
+                }
+
+                const rect = heading.getBoundingClientRect();
+                link.classList.toggle('active', rect.top <= 100 && rect.bottom >= 100);
+            });
+        });
+    }
+
+    // 在页面加载完成后生成目录
+    window.addEventListener('DOMContentLoaded', generateTOC);
+
+    (function loadPrism() {
+        const prismScript = document.createElement('script');
+        prismScript.src = '../js/prism.js';
+
+        prismScript.onload = function () {
+            // 确保启用行号插件
+            Prism.plugins.lineNumbers = true;
+
+            // 注册下载按钮
+            Prism.plugins.toolbar.registerButton('download', {
+                text: '下载代码',
+                onClick: function (env) {
+                    downloadCode(env.code, env.language);
                 }
             });
-            new_inner += tag[1];
-            return new_inner;
-        }
 
-        function generateTOC() {
-            const headings = Array.from(Query("h1, h2, h3, h4, h5, h6"))
-                .filter(heading => heading.className !== 'toc-ignore')
-                .map((heading, index) => {
-                    // 增强ID生成安全性
-                    let id = heading.textContent;
-                    id += `-heading${index}`;
-                    heading.id = id;
-                    return heading;
-                });
+            Prism.highlightAll();
+        };
+        document.head.appendChild(prismScript);
+    })();
 
-            const tocContainer = document.getElementById('toc');
-            let currentLevel = 1;
-            let tocHTML = '<ul style="padding-left: 0">';
-            headings.forEach((cheading, index) => {
-                    let heading = cheading;
-                    heading.innerHTML = new_innerHTML(heading, (element) => {
-                        const text = `<a href="#${heading.id}" class="heading-a">${element.textContent}</a>`;
-                        return text;
-                    }, false);
-                    const level = parseInt(heading.tagName.substring(1));
-                    const id = heading.id;
-
-                    // 修复标签闭合逻辑
-                    if (level > currentLevel) {
-                        tocHTML += '<ul>';
-                    } else if (level < currentLevel) {
-                        tocHTML += '</li></ul>'.repeat(currentLevel - level);
-                    } else if (index !== 0) {
-                        tocHTML += '</li>';
-                    }
-
-                    tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a>`;
-                    currentLevel = level;
-                }
-            );
-
-            // 闭合最后未关闭的标签
-            tocHTML += '</li></ul>';
-            tocContainer.innerHTML = tocHTML;
-            tocContainer.style.display = 'block';
-
-            window.addEventListener('scroll', () => {
-                const links = tocContainer.querySelectorAll('a');
-                links.forEach(link => {
-                    if (link.className !== 'heading-a') return;
-                    const hash = link.getAttribute('href') || '';
-                    const id = hash.startsWith('#') ? hash.slice(1) : null;
-
-                    const heading = document.getElementById(id);
-                    if (!heading) {
-                        console.warn('找不到对应标题:', id, '链接文本:', link.textContent);
-                        return;
-                    }
-
-                    const rect = heading.getBoundingClientRect();
-                    link.classList.toggle('active', rect.top <= 100 && rect.bottom >= 100);
-                });
-            });
-        }
-
-        // 在页面加载完成后生成目录
-        window.addEventListener('DOMContentLoaded', generateTOC);
-
-        (function loadPrism() {
-            const prismScript = document.createElement('script');
-            prismScript.src = '../js/prism.js';
-
-            prismScript.onload = function () {
-                // 确保启用行号插件
-                Prism.plugins.lineNumbers = true;
-
-                // 注册下载按钮
-                Prism.plugins.toolbar.registerButton('download', {
-                    text: '下载代码',
-                    onClick: function (env) {
-                        downloadCode(env.code, env.language);
-                    }
-                });
-
-                Prism.highlightAll();
-            };
-            document.head.appendChild(prismScript);
-        })();
-
-        function setTag(className, tags) {
-            doSe(className, (element) => {
-                for (const key in tags) {
-                    element.setAttribute(key, tags[key]);
-                }
-            });
-        }
-
-        setTag("pre", {
-            "class": "line-numbers",
+    function setTag(className, tags) {
+        doSe(className, (element) => {
+            for (const key in tags) {
+                element.setAttribute(key, tags[key]);
+            }
         });
-        setTag("code", {
-            "data-prismjs-copy": "复制",
-            "data-prismjs-copy-error": "复制失败",
-            "data-prismjs-copy-success": "复制成功",
-        });
-        setTag("img", {
-            "loading": "lazy",
-            "decoding": "async",
-            "class": "img-responsive",
-        });
-        doSe("img", img => {
-            if (!img.hasAttribute('data-error-handled')) {
-                img.setAttribute('data-error-handled', 'true');
+    }
 
-                // 创建备用元素
-                const fallback = document.createElement('div');
-                fallback.className = 'image-fallback';
-                fallback.innerHTML = `
+    setTag("pre", {
+        "class": "line-numbers",
+    });
+    setTag("code", {
+        "data-prismjs-copy": "复制",
+        "data-prismjs-copy-error": "复制失败",
+        "data-prismjs-copy-success": "复制成功",
+    });
+    setTag("img", {
+        "loading": "lazy",
+        "decoding": "async",
+        "class": "img-responsive",
+    });
+    doSe("img", img => {
+        if (!img.hasAttribute('data-error-handled')) {
+            img.setAttribute('data-error-handled', 'true');
+
+            // 创建备用元素
+            const fallback = document.createElement('div');
+            fallback.className = 'image-fallback';
+            fallback.innerHTML = `
                     <a href="${img.src}" target="_blank">图片加载失败！查看原图</a>
                 `;
-                fallback.style.display = 'none';
+            fallback.style.display = 'none';
 
-                // 包装图片
-                const container = document.createElement('div');
-                container.className = 'image-container';
-                img.parentNode.insertBefore(container, img);
-                container.appendChild(img);
-                container.appendChild(fallback);
+            // 包装图片
+            const container = document.createElement('div');
+            container.className = 'image-container';
+            img.parentNode.insertBefore(container, img);
+            container.appendChild(img);
+            container.appendChild(fallback);
 
-                // 添加错误处理
-                img.addEventListener('error', () => {
-                    fallback.style.display = 'block';
-                });
-            }
-        });
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-            },
-            options: {
-                skipHtmlTags: [            //  HTML tags that won't be searched for math
-                    'script', 'noscript', 'style', 'textarea', 'pre',
-                    'code', 'annotation', 'annotation-xml'
-                ],
-                enableMenu: false,
-            }
-        };
-    </script>
-</article>
-<script id="MathJax-script" async
-        src="../js/mathjax/es5/tex-chtml.js">
+            // 添加错误处理
+            img.addEventListener('error', () => {
+                fallback.style.display = 'block';
+            });
+        }
+    });
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+            skipHtmlTags: [            //  HTML tags that won't be searched for math
+                'script', 'noscript', 'style', 'textarea', 'pre',
+                'code', 'annotation', 'annotation-xml'
+            ],
+            enableMenu: false,
+        }
+    };
 </script>
 <script>
-    window.downloadCode = downloadCode;
-    document.addEventListener("DOMContentLoaded", function () {
+    addLoad(function () {
         document.querySelectorAll("a").forEach((item) => {
-            const url = item.href;
-            item.href = "{{ site.baseurl }}/link.html?url=" + url;
+            let url = item.href;
+            if (!url.startsWith("{{ site.url }}")) {
+                item.setAttribute("target", "blank");
+            }
+            if (!url.startsWith("{{ site.url }}"))
+                item.href = "{{ site.url }}/link.html?url=" + url;
         })
     })
+</script>
+<script id="MathJax-script" async
+        src="../js/mathjax/es5/tex-chtml.js">
 </script>

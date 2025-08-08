@@ -19,24 +19,8 @@
 <div class="div-fixid" style="color: #ffff00; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
 </div>
+{% include back_to_top.html %}
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const backToTopButton = document.getElementById("back-to-top");
-        backToTopButton.style.display = "none";
-
-        window.addEventListener("scroll", function () {
-            if (window.scrollY > 0) {
-                backToTopButton.style.display = "block";
-            } else {
-                backToTopButton.style.display = "none";
-            }
-        });
-
-        backToTopButton.addEventListener("click", function () {
-            window.scrollTo({top: 0, behavior: "smooth"});
-        });
-    });
-
     function changeBgText() {
         const bgText = document.getElementById("bg-text");
         if (bgText.style.display === "none") {
@@ -52,7 +36,14 @@
 <div id="body-content">
     {{ content }}
 </div>
-<button id="back-to-top" class="back">↑</button>
+<hr/>
+<footer>
+    版权申明：
+    <p>
+        本网站的所有内容均为个人原创，不代表任何组织或个人的观点。本网站的内容仅供参考，不构成任何投资建议。
+    </p>
+</footer>
+<div style="height: 80px;"></div>
 </body>
 <script src="../js/translate.js"></script>
 <script>
@@ -67,7 +58,6 @@
         const select = document.getElementById('translateSelectLanguage');
         select.addEventListener('mouseenter', function () {
             select.multiple = "multiple";
-            console.log("click");
         })
         select.addEventListener('mouseleave', function () {
             select.multiple = "";

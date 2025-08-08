@@ -1,4 +1,4 @@
-export function getSuffix(language) {
+export function getSuffix(langClass) {
     const extMap = {
         'python': 'py',
         'javascript': 'js',

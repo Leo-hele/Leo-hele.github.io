@@ -1,6 +1,6 @@
 import {getSuffix} from "./program_language";
 
-export function addPush(json) {
+function addPush(json) {
     return loadJson(json).then((data) => {
         return fetch("https://api.github.com/repos/Leo-hele/Leo-hele.github.io/contents/_posts", {
             method: "POST",
@@ -18,7 +18,7 @@ export function addPush(json) {
     });
 }
 
-export function addBlog(title, content, author, date, permalink, class_name) {
+function addBlog(title, content, author, date, permalink, class_name) {
     let blog = {
         title: title,
         author: author,

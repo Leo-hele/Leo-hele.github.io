@@ -1,9 +1,9 @@
-export function delay(time) {
+function delay(time) {
     return new Promise(resolve => {
         setTimeout(resolve, time);
     });
 }
-export function loadJson(url) {
+function loadJson(url) {
     return fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -16,7 +16,7 @@ export function loadJson(url) {
             throw error;
         });
 }
-export function loadFile(url) {
+function loadFile(url) {
     return fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -28,4 +28,15 @@ export function loadFile(url) {
             console.error('Error loading file:', error);
             throw error;
         });
+}
+function addLoad(func) {
+    if (window.onload) {
+        const oldLoad = window.onload;
+        window.onload = function () {
+            func();
+            oldLoad();
+        }
+    } else {
+        window.onload = func;
+    }
 }

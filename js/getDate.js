@@ -24,6 +24,6 @@ function date() {
     const week = now.getDay();
     const weekArr = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
     const weekDay = weekArr[week];
-    const time = year + "年" + month + "月" + day + "日" + " " + hour + ":" + minute + ":" + second + " " + weekDay;
+    const time = `${year}年${month}月${day}日 <br />${hour}:${minute}:${second} ${weekDay}`;
     return time;
 }
