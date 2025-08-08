@@ -9,5 +9,5 @@ function translateText(text, toLang){
             alternatives: 3,
             api_key: ""
         })
-    }).then(res => res.json())
+    }).then(res => res.json());
 }
