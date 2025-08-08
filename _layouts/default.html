@@ -46,14 +46,23 @@
 <div style="height: 80px;"></div>
 </body>
 <script src="../js/translate.js"></script>
-<script>
+<script src="../js/translateText.js" type="module"></script>
+<script type="module">
+    while (!initedTranslate) {
+    }
     translate.service.use('client.edge');
     const user_language = navigator.language;
-    translate.language.setDefaultTo(user_language); //设置默认翻译为的语种
+    console.log(user_language);
+    translate.language.setDefaultTo(translateLang(user_language)); //设置默认翻译为的语种
     translate.language.setLocal(user_language);
     translate.listener.start();
     translate.selectLanguageTag.show = true;
     translate.execute();
+    document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
+        (item) => {
+            console.log(item.value);
+        }
+    )
     document.addEventListener("DOMContentLoaded", function () {
         const select = document.getElementById('translateSelectLanguage');
         select.addEventListener('mouseenter', function () {
@@ -62,6 +71,61 @@
         select.addEventListener('mouseleave', function () {
             select.multiple = "";
         })
+    })
+</script>
+<script>
+    addLoad(function () {
+        let direction = {
+            left: false,
+            top: false,
+            right: false,
+            bottom: false
+        }; //上下左右
+
+        setInterval(function () {
+            if (direction.left) {
+                window.scrollBy(-10, 0);
+            } else if (direction.top) {
+                window.scrollBy(0, -10);
+            } else if (direction.right) {
+                window.scrollBy(10, 0);
+            } else if (direction.bottom) {
+                window.scrollBy(0, 10);
+            }
+        }, 1);
+
+        document.addEventListener("keydown", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = true;
+                    break;
+                case "ArrowUp":
+                    direction.top = true;
+                    break;
+                case "ArrowRight":
+                    direction.right = true;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = true;
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = false;
+                    break;
+                case "ArrowUp":
+                    direction.top = false;
+                    break;
+                case "ArrowRight":
+                    direction.right = false;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = false;
+                    break;
+            }
+        });
     })
 </script>
 </html>
