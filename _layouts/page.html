@@ -79,6 +79,18 @@ layout: default
     </div>
 </article>
 <script>
+    {% raw %}
+
+    function addLiquid() {
+        const md = document.getElementById("md-file");
+        let res = md.innerHTML.replaceAll("{\\%", "{%");
+        res = res.replaceAll("{\\{", "{{");
+        md.innerHTML = res;
+    }
+
+    addLiquid();
+    {% endraw %}
+
     function Query(className) {
         const mdfile = document.getElementById("md-file");
         const elements = mdfile.querySelectorAll(`${className}`);
@@ -100,7 +112,7 @@ layout: default
         }
         let new_inner = tag[0];
         const children = parent.childNodes;
-        const noTag = ['A', 'CODE', 'PRE', 'SPAN', 'P', 'DIV'];
+        const noTag = ['A'];
 
         children.forEach((celement) => {
             let element = celement;
@@ -139,6 +151,7 @@ layout: default
                     return text;
                 }, false);
                 const level = parseInt(heading.tagName.substring(1));
+                heading.innerHTML = " ".repeat(level - 1) + heading.innerHTML;
 
                 // 修复标签闭合逻辑
                 if (level > currentLevel) {
@@ -260,16 +273,14 @@ layout: default
             enableMenu: false,
         }
     };
-</script>
-<script>
+
     addLoad(function () {
         document.querySelectorAll("a").forEach((item) => {
             let url = item.href;
             if (!url.startsWith("{{ site.url }}")) {
-                item.setAttribute("target", "blank");
-            }
-            if (!url.startsWith("{{ site.url }}"))
+                item.target = "_blank";
                 item.href = "{{ site.url }}/link.html?url=" + url;
+            }
         })
     })
 </script>

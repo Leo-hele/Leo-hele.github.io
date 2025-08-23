@@ -23,6 +23,8 @@ hot: 0
 
 导航到仓库设置（Gitee顶栏）$\rightarrow$ 仓库设置（第一个）$\rightarrow$ 功能设置（第二个）$\rightarrow$ 同步（最后一个）$\rightarrow$ 仓库远程地址(用于强制同步)，把你刚刚在另外网站新建的仓库地址复制进去。
 
-![](%E5%90%8C%E6%AD%A5.png)
+![gitee-free-lfs_同步.png (1989×639)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/gitee-free-lfs_同步.png)
 
 Gitee就会把另外一个仓库里面的所有文件（包括LFS文件）复制进去，大功告成！
+
+不过最近Gitee好像修复了这个BUG

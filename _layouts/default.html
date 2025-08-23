@@ -2,8 +2,8 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="referrer" content="no-referrer">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ page.title }} - {{ site.title }}</title>
     <link type="text/css" rel="stylesheet" href="../style.css">
     <link rel="icon" href="https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico" type="image/x-icon"/>
@@ -38,18 +38,13 @@
 </div>
 <hr/>
 <footer>
-    版权申明：
-    <p>
-        本网站的所有内容均为个人原创，不代表任何组织或个人的观点。本网站的内容仅供参考，不构成任何投资建议。
-    </p>
+    <a href="..\license">版权申明</a>
 </footer>
 <div style="height: 80px;"></div>
 </body>
 <script src="../js/translate.js"></script>
 <script src="../js/translateText.js" type="module"></script>
 <script type="module">
-    while (!initedTranslate) {
-    }
     translate.service.use('client.edge');
     const user_language = navigator.language;
     console.log(user_language);
@@ -128,5 +123,4 @@
         });
     })
 </script>
-<script src="../js/img.js"></script>
 </html>

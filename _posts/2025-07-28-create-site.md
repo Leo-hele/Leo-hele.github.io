@@ -26,7 +26,7 @@ hot: 0
 
 ## 新建`index.html`
 
-建议下载[WebStorm](https://gitcode.com/Leo-hele/download_files/tree/main/Webstorm)~~（破解版免费）~~
+建议下载[WebStorm：JetBrains 出品的 JavaScript 和 TypeScript IDE](https://www.jetbrains.com/zh-cn/webstorm/)~~（[破解版](https://blog.idejihuo.com/topics/jetbrains)免费）~~（[快速下载链接，含破解包](https://gitcode.com/Leo-hele/download_files/tree/main/Webstorm)）
 
 `index.html`是显示在首页上的
 
@@ -34,7 +34,9 @@ hot: 0
 
 等待几分钟你就可以在`用户名.github.io`看到你的网站了！
 
-## 工具：[PicGo-Image](https://gitcode.com/Leo-hele/files/tree/main/PicGo)（上传图片，也可以每次都自己上传 ~~，只是麻烦而已嘛~~）
+## 工具：[PicGo-Image]([项目目录预览 - download_files - GitCode](https://gitcode.com/Leo-hele/download_files/tree/main/PicGo))（上传图片，也可以每次都自己上传 ~~，只是麻烦而已嘛~~）
+
+注：提供的链接有一个Pic List，是升级版，快速下载其他版本：[Releases · Kuingsmile/PicList · GitHub](https://gh.llkk.cc/https://github.com/Kuingsmile/PicList/releases/)（注意点击属于最新的一个版本位置的下面的（资产位置）链接，不是上面的，也可以下载其他版本），官网：[PicList](https://piclist.cn/)，PicGo官网：[PicGo](https://picgo.github.io/PicGo-Doc/zh/guide/#下载安装)（注意到了吗？是github.io哦）
 
 请先下载[Node.js](https://nodejs.cn/download/)（最好百度搜索安装教程，因为要安装Python2.7等语言）
 
@@ -46,7 +48,7 @@ PicGo的位置在右下角（系统托盘）里
 
    使用PicGo原版设置。
 
-   ![](PicGo1.png)
+   ![create-site_PicGo1.png (1180×670)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo1.png)
 
    注意！`PicGo`有时默认为master，但`GitHub`是main！
 
@@ -66,11 +68,11 @@ PicGo的位置在右下角（系统托盘）里
 
    创建后就是这样：
 
-   ![](PicGo3.png)
+   ![create-site_PicGo3.png (1647×3107)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo3.png)
 
    生成后就是这个页面：
 
-   ![](PicGo6.png)
+   ![create-site_PicGo6.png (1647×965)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo6.png)
 
    把它复制下来，粘贴到PicGo github token里。
 
@@ -92,11 +94,11 @@ PicGo的位置在右下角（系统托盘）里
    
    重启`PicGo`，插件就安装好了。
    
-   ![](PicGo2.png)
+   ![create-site_PicGo2.png (1178×634)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo2.png)
    
     配置（先注册Gitee）
    
-   ![](PicGo4.png)
+   ![create-site_PicGo4.png (1174×649)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo4.png)
    
     owner填用户名，repo填仓库名
    
@@ -108,7 +110,7 @@ PicGo的位置在右下角（系统托盘）里
    
     打开[私人令牌 - Gitee.com](https://gitee.com/profile/personal_access_tokens/new)
    
-   ![](PicGo5.png)
+   ![create-site_PicGo5.png (1395×923)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/create-site_PicGo5.png)
 
 与Github大同小异，但是**注意权限**！如果权限选择少了，就会在没有登录Gitee时上传失败！建议全选。
 
@@ -186,7 +188,7 @@ gem install jekyll
 ```yaml
 ---
 date: YYYY-mm-dd
-title: （显示名称）
+title: xxx（显示名称）
 permalink: /xxx1/xxx2/.../xxxn/（路径）
 layout: xxx（别改！就用原来的，这是显示效果，如果你知道怎么改可以改，原来有很多可以选一个喜欢的用，可以参见其它文章或者后面的部分）
 auther: xxx（姓名）
@@ -212,13 +214,13 @@ class: xxx（类别，也有可能以其它名称出现，参考原来的）
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} - {{ site.title }}</title>
-    <link type="text/css" rel="stylesheet" href="../style.css"> <!-- 注意路径要到根目录需要..\ -->
+    <title>{\{ page.title }} - {\{ site.title }}</title>
+    <link type="text/css" rel="stylesheet" href="../style.css"> <!-- 注意路径要到根目录需要"..\" -->
     <link rel="icon" href="网站的图像" type="image/x-icon"/>
     <script src="../js/base.js"></script>
 </head>
 <body>
-{{ content }}
+{\{ content }}
 </body>
 </html>
 ```
@@ -232,7 +234,7 @@ class: xxx（类别，也有可能以其它名称出现，参考原来的）
 layout: default
 ---
 <!-- 想不到吧，layout可以用layout -->
-{{ content }}
+{\{ content }}
 <!-- 可以有很多功能，比如代码高亮，公式高亮，复制代码，链接字体，评论，点赞，目录等，就像你看到的这篇文章一样 -->
 ```
 
@@ -268,23 +270,23 @@ jekyll serve
 
 ### Jekyll语言
 
-前面已经说了`layout`，下面再说一些：
+前面已经说了`layout`，下面再说一些（其实Jekyll用的是`liquid`）：
 
 #### 生成后的文件
 
 你可以在`_site`文件夹下查看生成后的文件，你会发现layout已经用上了。
 
-#### `{% xxx %}`：执行操作
+#### `{\% xxx %}`：执行操作
 
-##### `include`：
+##### `include`
 
-用法：`{% include xxx %}`
+用法：`{\% include xxx %}`
 
 效果：会把`_includes/xxx`的内容插入进来
 
 ##### `relative_include`
 
-用法：`{% relative_include xxx %}`
+用法：`{\% relative_include xxx %}`
 
 效果：会把`./xxx`的内容插入进来
 
@@ -292,12 +294,12 @@ jekyll serve
 
 用法：
 
-```liquid
-{% if xxx %}
+```html
+{\% if xxx %}
 xxx
-{% else %}
+{\% else %}
 xxx
-{% endif %}
+{\% endif %}
 ```
 
 效果：学过任何一个编程语言的人都知道，特别是c++的宏
@@ -315,9 +317,9 @@ xxx
 用法：
 
 ```htaccess
-{% unless xxx %}
+{\% unless xxx %}
 xxx
-{% endunless %}
+{\% endunless %}
 ```
 
 效果：恰好与`if`相反
@@ -327,16 +329,47 @@ xxx
 用法：
 
 ```html
-{% for xxx in xxx %}
+{\% for xxx in xxx %}
 xxx
-{% endfor %}
+{\% endfor %}
+```
+效果：学过任何一个编程语言的人都知道
+
+##### `case`
+
+用法：
+
+```html
+{\% case xxx %}
+{\% when xxx %}
+xxx
+{\% when xxx %}
+xxx
+...
+{\% else %}
+xxx
+{\% endcase %}
 ```
 
 
 
-#### `{{ xxx }}`获取值
+##### `raw`
 
-上一个的表达式也如下
+用法
+
+```html
+{\% raw %}
+xxx
+{\% endraw %}
+```
+
+效果：忽略里面的所有Jekyll语言的内容
+
+#### `{\{ xxx }}`获取值
+
+上一个`{\% xxx %}`的表达
+
+式也如下
 
 ##### `site.xxx`
 
@@ -350,9 +383,21 @@ xxx
 
 几乎与其它语言相通，不赘述
 
+#### 筛选器
+
+用法：
+
+```html
+{\{ xxx | xxx }}
+```
+
+效果：按照后面一个对前面一个进行操作
+
+#### 参见：[Liquid Filters | Jekyll 教程](https://jekylldo.cn/docs/liquid/filters/)；[Liquid 模板语言中文文档 | Liquid 中文网](https://liquid.bootcss.com/)；[看这！快速理解Liquid！基础篇_liquid语言-CSDN博客](https://blog.csdn.net/MCM0115/article/details/136793334)
+
 #### `_config.yml`
 
-配置信息，可以与`{{ xxx }}`共用，也可以指定Jekyll的动作，类似这样：
+配置信息，可以与`{\{ xxx }}`共用，也可以指定Jekyll的动作，类似这样：
 
 ```yaml
 baseurl: ""

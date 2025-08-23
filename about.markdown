@@ -2,6 +2,7 @@
 layout: page
 title: 关于
 permalink: /about/
+class: blogs/io
 date: 2025-7-24
 author: Leo
 email: hele199380@hotmail.com
@@ -13,9 +14,12 @@ email: hele199380@hotmail.com
 
 ### 代码、博客遵循以下协议
 
-![许可证](https://gitee.com/Leo-hele/picGo-image/raw/master/license.png)
+![license.png (2807×169)](https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/license.png)
+
+[版权申明](../license)
 
 ### 作者信息
+
 #### 网站
 
 - [github](https://github.com/Leo-hele)
