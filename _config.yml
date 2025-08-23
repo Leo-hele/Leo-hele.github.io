@@ -20,3 +20,6 @@ users:
   - name: Leo
     url: https://leo-hele.github.io/
     password: noPassword
+collections:
+  posts:
+    output: true
