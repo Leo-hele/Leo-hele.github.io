@@ -8,6 +8,7 @@ source "https://rubygems.org"
 # This will help ensure the proper Jekyll version is running.
 # Happy Jekylling!
 gem "jekyll", "~> 3.10.0"
+gem "jekyll-sitemap"
 gem "base64", "~> 0.2.0"
 gem "bigdecimal", "~> 3.1.8"
 gem "logger", "~> 1.7.0"

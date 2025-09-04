@@ -98,3 +98,25 @@ code {
     cursor: pointer;
     z-index: 1000;
 }
+.no-wrap {
+    white-space: nowrap;
+}
+.no-wrap img {
+    display: inline-block;
+}
+.center-pos {
+    transform: translate(-50%, -50%);
+}
+.center-x {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.center-y {
+    top: 50%;
+    transform: translateY(-50%);
+}
+.center-all {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

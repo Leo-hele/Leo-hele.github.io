@@ -1,0 +1,36 @@
+---
+layout: default
+title: 用户
+link: /user/
+---
+<div id="user"></div>
+<script>
+    async function load(){
+        const user_path = window.location.pathname.replace("{{ page.link }}", "");
+        if (user_path) {
+            const users = await loadJson("../users.json");
+            const user = users[user_path];
+            if (user === undefined) {
+                const notFound = loadFile("../404.html");
+                notFound.then((data) => {
+                    document.body.innerHTML = data;
+                });
+                return;
+            }
+            const userDiv = document.getElementById("user");
+            userDiv.innerHTML = `
+<div style="border-radius: 20%; border: 2px solid #ffffff; padding: 10px; width: 200px; height: 200px;" class="no-wrap">
+    <h1>
+        <img src="${user.image}" style="width: 100px; height: 100px;" class="center-y"/>
+        <div class="center-y">${user_path}</div>
+    </h1>
+    <a href="mailto:${user.email}">${user.email}</a>
+</div>
+<div>
+    <p><span>简介：${user.bio}</span></p>
+</div>
+            `;
+        }
+    }
+    load();
+</script>

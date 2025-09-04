@@ -1,0 +1,8 @@
+---
+layout: default
+---
+<div id="users">
+    {% for user in site.users %}
+    <a href="..\user\{{ user.name }}">{{ user.name }}</a>
+    {% endfor %}
+</div>

@@ -65,7 +65,7 @@ title: 文章广场
     <div style="height: 50px;">
         <input id="search-input" type="text" placeholder="搜索文章..."/>
         <button onclick="updateSearch();" title="搜索" id="search-button">
-            <img src="https://gitee.com/Leo-hele/picGo-image/raw/master/搜索.png" alt="搜索"
+            <img src="{{ site.imgs[0].link }}" alt="搜索" title="搜索"
                  style="width: 50px; height: 50px;">
         </button>
         <input id="search-input-contents" type="checkbox" onclick="updateSearch();"/>
@@ -81,10 +81,29 @@ title: 文章广场
 <div id="search-container">
     <p>加载中...</p>
 </div>
-<script src="../js/translateText.js" type="module"></script>
+{% include translateText.html %}
 <script>
     changeBgText();
     changeTime();
+
+    function getSearch() {
+        const search = getParam("search");
+        if (search) {
+            document.getElementById("search-input").value = search;
+            updateSearch();
+        }
+    }
+
+    function getSelectClass() {
+        const selectClass = getParam("class");
+        if (selectClass) {
+            const checkbox = document.getElementById("search-class").querySelector(`input[id="/所有分类${selectClass}"]`);
+            if (!checkbox) {
+                checkbox.click();
+            }
+            updateSearch();
+        }
+    }
 
     function InitSort() {
         const keySelect = document.getElementById("key");
@@ -160,11 +179,9 @@ title: 文章广场
         const Cmp = Cmps[document.getElementById("cmp").value];
         const blogs = await loadSearch();
         const searchBlogs = [];
-        while (!initedTranslate) {
-        }
         for (const blog of blogs) {
             if (checksClass.has(blog.class)) {
-                blog.title = translateText(blog.title, document.getElementById('translateSelectLanguage').value);
+                blog.title = translateText(blog.title);
                 searchBlogs.push(blog);
             }
         }
@@ -195,42 +212,66 @@ title: 文章广场
         return className.replace("/所有分类", "");
     }
 
-    function setOneCheckbox(checkbox, check) {
-        const inputElement = checkbox.querySelector('input');
-        const className = getClass(inputElement.id);
-        if (check) {
-            inputElement.checked = true;
-            inputElement.indeterminate = false; // 清除部分选中状态
-            if (checkbox.querySelectorAll('input').length === 1) {
-                checksClass.add(className);
+    function checkCheckbox(checkbox, childStates) {
+        if (!checkbox.dataUserCheck) {
+            return;
+        }
+        checkbox.indeterminate = false;
+        const children = checkbox.children[2].querySelectorAll('input');
+        const checked = checkbox.children[0].checked;
+        if (checked) {
+            checkbox.dataUOC = true;
+        }
+        children.forEach(child => {
+            const div = child.parentElement;
+            div.dataParentCheck = true;
+            div.dataUserCheck = false;
+            div.dataUOC = false;
+            if (checked) {
+                childStates.set(div, child.checked);
+                child.checked = true;
+            } else {
+                if (!checkbox.dataUOC) {
+                    childStates.set(div, false);
+                }
+                child.checked = childStates.get(div);
             }
-        } else {
-            inputElement.checked = false;
-            inputElement.indeterminate = false; // 清除部分选中状态
-            if (checksClass.has(className) && checkbox.querySelectorAll('input').length === 1) {
-                checksClass.delete(className);
-            }
+        });
+        if (! checked) {
+            checkbox.dataUOC = false;
         }
     }
 
-    function updateAncestorCheckboxes(checkbox) {
-        const parentCheckbox = checkbox.parentElement.parentElement.parentElement;
-        if (checkbox === document.getElementById("search-class")) {
-            return; // 如果是顶层元素，则不处理
+    function setCheckbox(checkbox) {
+        if (checkbox.dataParentCheck) {
+            return;
         }
-        const check = Check(checkbox);
-        const inputElement = checkbox.querySelector('input');
-        if (check === 0) {
-            inputElement.checked = false;
-            inputElement.indeterminate = false;
-        } else if (check === 1) {
-            inputElement.checked = true;
-            inputElement.indeterminate = false;
+        const state = checkbox.children[0].checked;
+        const parent = checkbox.parentElement.parentElement.parentElement;
+        if (parent !== undefined && parent.id !== "search-class") {
+            const parentCheckbox = parent.querySelector("input");
+            console.log(parent);
+            const checkState = Check(parent);
+            parent.dataUserCheck = false;
+            if (checkState === 1) {
+                parentCheckbox.checked = true;
+                parentCheckbox.indeterminate = false;
+            } else if (checkState === 0) {
+                parentCheckbox.checked = false;
+                parentCheckbox.indeterminate = false;
+            } else {
+                parentCheckbox.checked = false;
+                parentCheckbox.indeterminate = true;
+            }
+            setCheckbox(parent);
+        }
+        console.log(checkbox.children[0].value);
+        const className = getClass(checkbox.children[0].value);
+        if (state) {
+            checksClass.add(className);
         } else {
-            inputElement.indeterminate = true;
-            inputElement.checked = false; // 部分选中状态时，保持未选中
+            checksClass.delete(className);
         }
-        updateAncestorCheckboxes(parentCheckbox);
     }
 
     function Option(class_, base_class) {
@@ -238,7 +279,7 @@ title: 文章广场
         let alloptions = document.createElement("div");
         let optionInput = document.createElement("input");
         optionInput.type = "checkbox";
-        optionInput.checked = "";
+        optionInput.checked = false;
         optionInput.value = base_class;
         optionInput.id = base_class;
         alloptions.appendChild(optionInput);
@@ -257,39 +298,13 @@ title: 文章广场
         alloptions.appendChild(optionLabel);
         // 保存子节点原始状态
         const childStates = new WeakMap();
-
+        optionInput.addEventListener("click", e => {
+            e.target.dataUserCheck = true;
+        });
         optionInput.addEventListener('change', e => {
-            // 更新所有子节点
-            const checkboxes = children_list.querySelectorAll('input');
-            if (e.target.checked) {
-                // 保存子节点原始状态
-                checkboxes.forEach(child => {
-                    childStates.set(child, child.checked);
-                    setOneCheckbox(child.parentElement, 1);
-                });
-                e.target.dataChecked = true; // 标记为已选中
-            } else {
-                if (Check(e.target.parentElement) === 1 && e.target.dataChecked === false) {
-                    checkboxes.forEach(child => {
-                        // 如果父节点是全选状态，保存子节点原始状态
-                        childStates.set(child, false);
-                    })
-                }
-                // 恢复子节点原始状态
-                checkboxes.forEach(child => {
-                    const prevState = childStates.get(child);
-                    if (prevState !== undefined) {
-                        setOneCheckbox(child.parentElement, prevState);
-                    }
-                });
-                e.target.dataChecked = false; // 标记为未选中
-            }
-            if (checkboxes.length === 0) {
-                setOneCheckbox(e.target.parentElement, e.target.checked);
-            }
-            // 更新祖先节点
-            updateAncestorCheckboxes(e.target.parentElement);
-            updateSearch();
+            const parent = e.target.parentElement;
+            checkCheckbox(parent, childStates);
+            setCheckbox(parent);
         });
         alloptions.appendChild(children_list);
         return alloptions;
@@ -335,6 +350,8 @@ title: 文章广场
         li.appendChild(option);
         ul.appendChild(li);
         initSearch(select);
+        getSelectClass();
+        getSearch();
     }
 
     document.addEventListener('DOMContentLoaded', InitSelect);

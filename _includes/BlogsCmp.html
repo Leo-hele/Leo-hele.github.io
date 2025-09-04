@@ -112,12 +112,12 @@
         return blog.hot;
     }
     function KeyAll(blog) {
-        return KeyCorrelation(Levenshtein)(blog) * 7 + KeyHot(blog) * 4;
+        return KeyCorrelation(CosineSimilarity)(blog) * 27 + KeyHot(blog) * 4;
     }
     function CmpLess(a, b){return a - b;}
     function CmpGreater(a, b){return b - a;}
     let Keys = [KeyAll, KeyName, KeyClass, KeyDate, KeyHot];
-    let KeyNames = ["智能排序（0×标题+0×分类+0×日期+7×相关性 Levenshtein+4×热度）", "标题", "分类", "日期", "热度"];
+    let KeyNames = ["智能排序（0×标题+0×分类+0×日期+27×相关性 Cosine+4×热度）", "标题", "分类", "日期", "热度"];
     let Cmps = [CmpGreater, CmpLess];
     let CmpNames = ["降序", "升序"];
     let SimilarityNames = ["Jaccard", "Dice", "Levenshtein", "Hamming", "Cosine"];

@@ -1,0 +1,20 @@
+<div id="header-container">
+    {% include nav.html %}
+    <div class="div-fixid center-all" style="color: #ffff00;">
+        <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
+    </div>
+    {% include back_to_top.html %}
+    <script>
+        function changeBgText() {
+            const bgText = document.getElementById("bg-text");
+            if (bgText.style.display === "none") {
+                bgText.style.display = "block";
+            } else {
+                bgText.style.display = "none";
+            }
+        }
+
+        window.changeBgText = changeBgText;
+    </script>
+    {% include date.html %}
+</div>

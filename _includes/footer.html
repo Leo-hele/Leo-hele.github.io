@@ -1,0 +1,38 @@
+<hr/>
+<div id="footer-container">
+    <footer>
+        <a href="../license" target="_blank">版权申明</a>
+        <br/>
+        <a href="../robots.txt" target="_blank">机器人协议</a>
+    </footer>
+    <div style="height: 80px;"></div>
+    <script src="../js/translate.js"></script>
+    <script type="module">
+        translate.service.use('client.edge');
+        const user_language = navigator.language;
+        // console.log(user_language);
+        translate.language.setDefaultTo(user_language);
+        translate.language.setLocal(user_language);
+        translate.listener.start();
+        translate.selectLanguageTag.show = true;
+        translate.execute();
+        // document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
+        //     (item) => {
+        //         console.log(item.value);
+        //     }
+        // )
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("select").forEach((select) => {
+                select.addEventListener('mouseenter', function () {
+                    select.multiple = "multiple";
+                })
+                select.addEventListener('mouseleave', function () {
+                    select.multiple = "";
+                })
+                select.addEventListener('change', function () {
+                    select.multiple = "";
+                })
+            });
+        })
+    </script>
+</div>

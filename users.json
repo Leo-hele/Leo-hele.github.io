@@ -1,0 +1,13 @@
+---
+layout: null
+---
+{
+  {% for user in site.users %}
+    "{{ user.name }}": {
+      "image": "{{ user.image }}",
+      "email": "{{ user.email }}",
+      "url": "{{ user.name | downcase }}.github.io",
+      "bio": "{{ user.bio }}"
+    } {% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}

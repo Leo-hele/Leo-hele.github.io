@@ -1,3 +1,6 @@
+---
+sitemap: false
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +22,7 @@
             a.href = url;
         }
     }else {
-        a.href = window.location.href.replace("{{ site.url }}", "");
+        a.href = "{{ site.url }}/404.html"
     }
     a.click();
 </script>

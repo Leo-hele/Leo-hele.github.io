@@ -6,121 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ page.title }} - {{ site.title }}</title>
     <link type="text/css" rel="stylesheet" href="../style.css">
-    <link rel="icon" href="https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico" type="image/x-icon"/>
     <script src="../js/base.js"></script>
+    <link rel="icon" href="{{ site.favicon }}" type="image/x-icon"/>
 </head>
 <body>
-{% include nav.html %}
-<h1 class="toc-ignore">欢迎来到Leo的网站</h1>
-<noscript>
-    <h2 class="toc-ignore">您的浏览器不支持JavaScript</h2>
-    <p>请启用JavaScript以获得更好的体验</p>
-</noscript>
-<div class="div-fixid" style="color: #ffff00; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
-</div>
-{% include back_to_top.html %}
-<script>
-    function changeBgText() {
-        const bgText = document.getElementById("bg-text");
-        if (bgText.style.display === "none") {
-            bgText.style.display = "block";
-        } else {
-            bgText.style.display = "none";
-        }
-    }
-
-    window.changeBgText = changeBgText;
-</script>
-{% include date.html %}
+{% include header.html %}
 <div id="body-content">
     {{ content }}
 </div>
-<hr/>
-<footer>
-    <a href="..\license">版权申明</a>
-</footer>
-<div style="height: 80px;"></div>
+{% include footer.html %}
 </body>
-<script src="../js/translate.js"></script>
-<script src="../js/translateText.js" type="module"></script>
-<script type="module">
-    translate.service.use('client.edge');
-    const user_language = navigator.language;
-    console.log(user_language);
-    translate.language.setDefaultTo(translateLang(user_language)); //设置默认翻译为的语种
-    translate.language.setLocal(user_language);
-    translate.listener.start();
-    translate.selectLanguageTag.show = true;
-    translate.execute();
-    document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
-        (item) => {
-            console.log(item.value);
-        }
-    )
-    document.addEventListener("DOMContentLoaded", function () {
-        const select = document.getElementById('translateSelectLanguage');
-        select.addEventListener('mouseenter', function () {
-            select.multiple = "multiple";
-        })
-        select.addEventListener('mouseleave', function () {
-            select.multiple = "";
-        })
-    })
-</script>
-<script>
-    addLoad(function () {
-        let direction = {
-            left: false,
-            top: false,
-            right: false,
-            bottom: false
-        }; //上下左右
-
-        setInterval(function () {
-            if (direction.left) {
-                window.scrollBy(-10, 0);
-            } else if (direction.top) {
-                window.scrollBy(0, -10);
-            } else if (direction.right) {
-                window.scrollBy(10, 0);
-            } else if (direction.bottom) {
-                window.scrollBy(0, 10);
-            }
-        }, 1);
-
-        document.addEventListener("keydown", function (e) {
-            switch (e.key) {
-                case "ArrowLeft":
-                    direction.left = true;
-                    break;
-                case "ArrowUp":
-                    direction.top = true;
-                    break;
-                case "ArrowRight":
-                    direction.right = true;
-                    break;
-                case "ArrowDown":
-                    direction.bottom = true;
-                    break;
-            }
-        });
-        document.addEventListener("keyup", function (e) {
-            switch (e.key) {
-                case "ArrowLeft":
-                    direction.left = false;
-                    break;
-                case "ArrowUp":
-                    direction.top = false;
-                    break;
-                case "ArrowRight":
-                    direction.right = false;
-                    break;
-                case "ArrowDown":
-                    direction.bottom = false;
-                    break;
-            }
-        });
-    })
-</script>
 </html>

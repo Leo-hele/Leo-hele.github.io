@@ -1,7 +1,15 @@
-<div class="header" style="position: relative;">
-  {% for item in site.nav %}
-  <a href="{{ item.link }}" class="headerItem">
-    {{ item.name }}
-  </a>
-  {% endfor %}
+<div id="header">
+    <div class="header" style="position: relative;">
+      {% for item in site.nav %}
+      <a href="{{ item.link }}" class="headerItem">
+        {{ item.name }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <h1 class="toc-ignore">欢迎来到Leo的网站</h1>
+    <noscript>
+        <h2 class="toc-ignore">您的浏览器不支持JavaScript</h2>
+        <p>请启用JavaScript以获得更好的体验</p>
+    </noscript>
 </div>

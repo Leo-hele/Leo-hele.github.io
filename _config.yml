@@ -1,4 +1,5 @@
 title: Leo's site
+favicon: https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico
 nav:
   - name: 首页
     link: /
@@ -13,13 +14,21 @@ other-urls:
     link: https://gitee.com/Leo-hele/
   - name: 洛谷
     link: https://www.luogu.com.cn/user/1068806/
+imgs:
+    - name: search
+      link: https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/search.png
 baseurl: ""
 url: "localhost:4000"
 usersNum: 1
 users:
-  - name: Leo
-    url: https://leo-hele.github.io/
+  - name: Leo-hele
     password: noPassword
+    image: https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico
+    email: Leo-hele@outlook.com
 collections:
-  posts:
+  robots.txt:
     output: true
+    permalink: /robots.txt
+gems:
+  - jekyll-sitemap
+  - liquid

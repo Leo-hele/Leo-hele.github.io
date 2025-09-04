@@ -1,0 +1,12 @@
+---
+layout: null
+---
+User-agent: leo-hele.github.io
+Allow: /
+Sitemap: {{ site.url }}/sitemap.xml
+
+User-agent: *
+Disallow: /users/
+Disallow: /link.html
+Sitemap: {{ site.url }}/sitemap.xml
+Disallow: /

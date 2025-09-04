@@ -17,3 +17,58 @@
         });
     });
 </script>
+<script>
+    addLoad(function () {
+        let direction = {
+            left: false,
+            top: false,
+            right: false,
+            bottom: false
+        }; //上下左右
+
+        setInterval(function () {
+            if (direction.left) {
+                window.scrollBy(-10, 0);
+            } else if (direction.top) {
+                window.scrollBy(0, -10);
+            } else if (direction.right) {
+                window.scrollBy(10, 0);
+            } else if (direction.bottom) {
+                window.scrollBy(0, 10);
+            }
+        }, 1);
+
+        document.addEventListener("keydown", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = true;
+                    break;
+                case "ArrowUp":
+                    direction.top = true;
+                    break;
+                case "ArrowRight":
+                    direction.right = true;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = true;
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = false;
+                    break;
+                case "ArrowUp":
+                    direction.top = false;
+                    break;
+                case "ArrowRight":
+                    direction.right = false;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = false;
+                    break;
+            }
+        });
+    })
+</script>

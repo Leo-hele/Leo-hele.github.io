@@ -1,0 +1,11 @@
+<div id="text"></div>
+<script>
+    function translateText(text){
+        const divText = document.getElementById("text");
+        divText.innerHTML = text;
+        translate.execute();
+        const res = divText.innerHTML;
+        divText.innerHTML = "";
+        return res;
+    }
+</script>
