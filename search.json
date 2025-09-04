@@ -10,7 +10,7 @@ layout: null
       "date"     : "{{ post.date }}",
       "auther"   : "{{ post.auther }}",
       "email"    : "{{ post.email }}",
-      "hot"      : "{{ post.hot }}"
+      "hot"      :  {{ post.hot }}
     } {% unless forloop.last %}, {% endunless %}
   {% endfor %}
 ]

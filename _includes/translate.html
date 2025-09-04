@@ -1,0 +1,18 @@
+<script src="../js/translate.js"></script>
+<script type="module">
+    const loaded = await loadJson("../lang.json");
+    const btot = loaded[0], ttob = loaded[1];
+    translate.service.use('client.edge');
+    const user_language = navigator.language;
+    // console.log(user_language);
+    translate.language.setDefaultTo(btot[user_language]);
+    translate.language.setLocal(user_language);
+    translate.listener.start();
+    translate.selectLanguageTag.show = true;
+    translate.execute();
+    // document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
+    //     (item) => {
+    //         console.log(item.value);
+    //     }
+    // )
+</script>

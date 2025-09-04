@@ -101,7 +101,7 @@ code {
 .no-wrap {
     white-space: nowrap;
 }
-.no-wrap img {
+.no-wrap * {
     display: inline-block;
 }
 .center-pos {
@@ -119,4 +119,8 @@ code {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+pre {
+    max-width: 90%;
 }

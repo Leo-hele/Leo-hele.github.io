@@ -35,8 +35,8 @@ layout: default
         max-width: 80%;
     }
 
-    pre {
-        max-width: 90%;
+    .heading-show {
+        text-decoration: underline #ffffff solid 2px;
     }
 </style>
 <div class="toc-container">
@@ -44,36 +44,33 @@ layout: default
     <div id="toc"></div>
 </div>
 <article class="page">
-    <p>
-    <h1 class="toc-ignore">{{ page.title }}</h1>
-    <div class="meta" style="font-size: 12px;">
-        创作日期：{{ page.date | date: "%Y年%m月%d日" }}
-        <br/>
-        创作者：{{ page.author }}
-        <br/>
-        分类：{{ page.class }}
-        <br/>
-        注：
-        <br/>
-        我的文章所有下载<a href="https://gitcode.com/Leo-hele/download_files/">内容</a>、<a
-            href="https://gitee.com/Leo-hele/picGo-image">图片</a>均由<a href="https://gitcode.com">GitCode</a>、<a
-            href="https://gitee.com">Gitee</a>托管，中国访问速度较快。如果您在国外，可以在官网下载。
-        <br/>
-        All downloadable <a href="https://gitcode.com/Leo-hele/download_files">content</a>, <a
-            href="https://gitee.com/Leo-hele/picGo-image">images</a> in my article are hosted by <a
-            href="https://gitcode.com">Gitcode</a> and <a
-            href="https://gitee.com">Gitee</a>, which offers fast access speeds in China. If you are outside China, you
-        can download
-        from the official website.
-        <br/>
-        如果您发现内容有误或需要更新，请在<a href="https://github.com/Leo-hele/Leo-hele.github.io/issues">Github</a>上提交Issue、PR等，或<a
-            href="mailto:{{ page.email }}?subject=建议">联系作者</a>，谢谢！
-        <br/>
-        If you find any errors or need updates, please submit an issue or PR on <a
-            href="https://github.com/Leo-hele/Leo-hele.github.io/issues">GitHub</a>, or <a
-            href="mailto:{{ page.email }}?subject=suggestion">contact the author</a>. Thank you!
+    <div id="page-header">
+        <p>
+        <h1 class="toc-ignore">{{ page.title }}</h1>
+        <div class="meta" style="font-size: 12px;">
+            创作日期：{{ page.date | date: "%Y年%m月%d日" }}
+            <br/>
+            创作者：{{ page.author }}
+            <br/>
+            分类：{{ page.class }}
+            <br/>
+            注：
+            <br/>
+            我的文章所有下载<a href="https://gitcode.com/Leo-hele/download_files/">内容</a>、<a
+                href="https://gitee.com/Leo-hele/picGo-image">图片</a>均由<a href="https://gitcode.com">GitCode</a>、<a
+                href="https://gitee.com">Gitee</a>托管，中国访问速度较快。如果您在国外，可以在官网下载。
+            <br/>
+            如果您发现内容有误或需要更新，请在<a href="https://github.com/Leo-hele/Leo-hele.github.io/issues">Github</a>上提交Issue、PR等，或<a
+                href="mailto:{{ page.email }}?subject=建议">联系作者</a>，谢谢！
+            <br/>
+        </div>
+        <a download="{{ page.title }}.html" id="download-html">下载html文件</a>
+        <script>
+            const a = document.getElementById("download-html");
+            a.href = window.location.href;
+        </script>
+        <hr/>
     </div>
-    <hr/>
     <div id="md-file">
         {{ content }}
     </div>
@@ -144,28 +141,42 @@ layout: default
         let currentLevel = 1;
         let tocHTML = '<ul style="padding-left: 0">';
         headings.forEach((cheading, index) => {
-                let heading = cheading;
-                const id = cheading.id;
-                heading.innerHTML = new_innerHTML(heading, (element) => {
-                    const text = `<a href="#${id}" class="heading-a">${element.textContent}</a>`;
-                    return text;
-                }, false);
-                const level = parseInt(heading.tagName.substring(1));
-                heading.innerHTML = " ".repeat(level - 1) + heading.innerHTML;
+            let heading = cheading;
+            heading.className += "no-wrap";
+            const id = cheading.id;
+            heading.innerHTML = new_innerHTML(heading, (element) => {
+                const text = `<a href="#${id}" class="heading-a">${element.textContent}</a>`;
+                return text;
+            }, false);
+            const h$ = document.createElement("p");
+            h$.className = "heading-show";
+            h$.innerHTML = "#";
+            h$.style.display = "none";
+            heading.appendChild(h$);
+            addLoad(() => {
+                const h$ = heading.querySelector(".heading-show");
+                heading.addEventListener("mouseenter", () => {
+                    h$.style.display = "inline";
+                });
+                heading.addEventListener("mouseleave", () => {
+                    h$.style.display = "none";
+                });
+            });
+            const level = parseInt(heading.tagName.substring(1));
+            heading.innerHTML = " ".repeat(level - 1) + heading.innerHTML;
 
-                // 修复标签闭合逻辑
-                if (level > currentLevel) {
-                    tocHTML += '<ul>'.repeat(level - currentLevel);
-                } else if (level < currentLevel) {
-                    tocHTML += '</li></ul>'.repeat(currentLevel - level);
-                } else if (index !== 0) {
-                    tocHTML += '</li>';
-                }
-
-                tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a>`;
-                currentLevel = level;
+            // 修复标签闭合逻辑
+            if (level > currentLevel) {
+                tocHTML += '<ul>'.repeat(level - currentLevel);
+            } else if (level < currentLevel) {
+                tocHTML += '</li></ul>'.repeat(currentLevel - level);
+            } else if (index !== 0) {
+                tocHTML += '</li>';
             }
-        );
+
+            tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a><hr/>`;
+            currentLevel = level;
+        });
 
         // 闭合最后未关闭的标签
         tocHTML += '</li></ul>';

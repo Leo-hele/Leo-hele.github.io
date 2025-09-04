@@ -81,7 +81,6 @@ title: 文章广场
 <div id="search-container">
     <p>加载中...</p>
 </div>
-{% include translateText.html %}
 <script>
     changeBgText();
     changeTime();
@@ -90,8 +89,13 @@ title: 文章广场
         const search = getParam("search");
         if (search) {
             document.getElementById("search-input").value = search;
-            updateSearch();
+        }else{
+            const cookieSearch = getCookie("search");
+            if (cookieSearch) {
+                document.getElementById("search-input").value = cookieSearch;
+            }
         }
+        updateSearch();
     }
 
     function getSelectClass() {
@@ -101,8 +105,13 @@ title: 文章广场
             if (!checkbox) {
                 checkbox.click();
             }
-            updateSearch();
+        }else{
+            const cookieClass = getCookie("class");
+            if (cookieClass) {
+                checksClass.add(cookieClass);
+            }
         }
+        updateSearch();
     }
 
     function InitSort() {
@@ -173,13 +182,30 @@ title: 文章广场
     function loadSearch() {
         return loadJson("../search.json");
     }
+    function setCookie(name, value) {
+        document.cookie = `${name}=${value}; path=/; max-age=31536000`;
+    }
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function setCookieSearch() {
+        const search = document.getElementById("search-input").value;
+        const selectClass = checksClass;
+        setCookie("search", search);
+        setCookie("class", selectClass);
+    }
 
     async function updateSearch() {
         const Key = Keys[document.getElementById("key").value];
         const Cmp = Cmps[document.getElementById("cmp").value];
         const blogs = await loadSearch();
         const searchBlogs = [];
+        // console.log("updateSearch", checksClass);
         for (const blog of blogs) {
+            // console.log("look at", blog);
             if (checksClass.has(blog.class)) {
                 blog.title = translateText(blog.title);
                 searchBlogs.push(blog);
@@ -206,6 +232,7 @@ title: 文章广场
             });
         }
         translate.execute();
+        setCookieSearch();
     }
 
     function getClass(className) {
@@ -213,9 +240,6 @@ title: 文章广场
     }
 
     function checkCheckbox(checkbox, childStates) {
-        if (!checkbox.dataUserCheck) {
-            return;
-        }
         checkbox.indeterminate = false;
         const children = checkbox.children[2].querySelectorAll('input');
         const checked = checkbox.children[0].checked;
@@ -224,8 +248,6 @@ title: 文章广场
         }
         children.forEach(child => {
             const div = child.parentElement;
-            div.dataParentCheck = true;
-            div.dataUserCheck = false;
             div.dataUOC = false;
             if (checked) {
                 childStates.set(div, child.checked);
@@ -236,23 +258,29 @@ title: 文章广场
                 }
                 child.checked = childStates.get(div);
             }
+            setCheckClass(div);
         });
         if (! checked) {
             checkbox.dataUOC = false;
         }
+        setCheckClass(checkbox);
     }
 
-    function setCheckbox(checkbox) {
-        if (checkbox.dataParentCheck) {
-            return;
-        }
+    function setCheckClass(checkbox){
         const state = checkbox.children[0].checked;
+        const className = getClass(checkbox.children[0].value);
+        if (state) {
+            checksClass.add(className);
+        } else {
+            checksClass.delete(className);
+        }
+    }
+    function setCheckbox(checkbox) {
+        setCheckClass(checkbox);
         const parent = checkbox.parentElement.parentElement.parentElement;
         if (parent !== undefined && parent.id !== "search-class") {
             const parentCheckbox = parent.querySelector("input");
-            console.log(parent);
             const checkState = Check(parent);
-            parent.dataUserCheck = false;
             if (checkState === 1) {
                 parentCheckbox.checked = true;
                 parentCheckbox.indeterminate = false;
@@ -264,13 +292,6 @@ title: 文章广场
                 parentCheckbox.indeterminate = true;
             }
             setCheckbox(parent);
-        }
-        console.log(checkbox.children[0].value);
-        const className = getClass(checkbox.children[0].value);
-        if (state) {
-            checksClass.add(className);
-        } else {
-            checksClass.delete(className);
         }
     }
 
@@ -298,13 +319,11 @@ title: 文章广场
         alloptions.appendChild(optionLabel);
         // 保存子节点原始状态
         const childStates = new WeakMap();
-        optionInput.addEventListener("click", e => {
-            e.target.dataUserCheck = true;
-        });
-        optionInput.addEventListener('change', e => {
+        optionInput.addEventListener('click', e => {
             const parent = e.target.parentElement;
             checkCheckbox(parent, childStates);
             setCheckbox(parent);
+            updateSearch();
         });
         alloptions.appendChild(children_list);
         return alloptions;
@@ -335,7 +354,6 @@ title: 文章广场
 
     function initSearch(select) {
         select.querySelector("input").click();
-        delay(500).then(updateSearch);
     }
 
     // 修改InitSelect中的调用方式

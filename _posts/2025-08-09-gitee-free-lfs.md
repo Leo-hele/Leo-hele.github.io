@@ -9,7 +9,7 @@ class: /文章/网页/Gitee
 hot: 0
 ---
 
-# 免费使用[Gitee](https://gitee.com/)的[Git LFS](https://cn.bing.com/search?q=git LFS&qs=n&form=QBRE&sp=-1&lq=0&pq=git lfs&sc=12-7&sk=&cvid=A2D330C1F5A84A9584DE565BEAD9C98A)功能
+# 免费使用[Gitee](https://gitee.com/)的[Git LFS](https://cn.bing.com/search?q=git%20LFS)功能
 
 众所周知，Gitee只允许**给了钱（或试用期）的公司**使用LFS功能，不然是没有这个功能的。
 
