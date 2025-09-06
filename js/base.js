@@ -1,14 +1,25 @@
+---
+layout: null
+---
 function delay(time) {
     return new Promise(resolve => {
         setTimeout(resolve, time);
     });
+}
+class LoadError extends Error {
+    constructor(response) {
+        super(`HTTP Error! status: ${response.status}`);
+        this.name = "LoadError";
+        this.code = response.status;
+        this.response = response;
+    }
 }
 function loadJson(url) {
     console.log("loadJson", url);
     return fetch(url)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new LoadError(response);
             }
             return response.json();
         })
@@ -18,10 +29,11 @@ function loadJson(url) {
         });
 }
 function loadFile(url) {
+    console.log("loadFile", url);
     return fetch(url)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new LoadError(response);
             }
             return response.text();
         })
@@ -30,15 +42,15 @@ function loadFile(url) {
             throw error;
         });
 }
-function addLoad(func) {
-    if (window.onload) {
-        const oldLoad = window.onload;
-        window.onload = function () {
+function addLoad(func, obj = window) {
+    if (obj.onload) {
+        const oldLoad = obj.onload;
+        obj.onload = function () {
             func();
             oldLoad();
         }
     } else {
-        window.onload = func;
+        obj.onload = func;
     }
 }
 function getParams(){
@@ -56,4 +68,22 @@ function getParams(){
 const params = getParams();
 function getParam(name, defaultValue = null) {
     return params[name] || defaultValue;
+}
+async function getError(error_code) {
+    const data = await loadFile(`{{ site.url }}/${error_code}/`);
+    const parser = new DOMParser();
+    const newDoc = parser.parseFromString(data, "text/html");
+    document.replaceChild(newDoc.documentElement, document.documentElement);
+}
+function execute(){
+    document.querySelectorAll("a").forEach((link) => {
+        const isNas = "nas" in link.dataset;
+        if (! (isNas || link.href.endsWith("/"))){
+            link.href += "/";
+        }
+        if (link.target === "_blank"){
+            link.target = link.href;
+        }
+    })
+    translate.execute();
 }

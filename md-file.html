@@ -1,0 +1,44 @@
+---
+layout: default
+link: md-file/
+---
+<div id="show-div"></div>
+<script type="module">
+    const baseurl = window.location.href;
+    const url = baseurl.replace("{{ page.link }}", "");
+    const div = document.getElementById("show-div");
+    if (url != "{{ site.url }}/") {
+        div.innerHTML = `
+<div>
+    <h1>正在加载……</h1>
+    <p>如果长时间没有反应，请检查链接是否正确。</p>
+</div>`;
+        try {
+            const data = await loadFile(url);
+            const parser = new DOMParser();
+            const fileDoc = parser.parseFromString(data, "text/html");
+            const add = fileDoc.querySelectorAll(".add-md");
+            add.forEach((item) => {
+                console.log(item);
+            })
+            const newDoc = parser.parseFromString("<!DOCTYPE html><html></html>", "text/html");
+            add.forEach((item) => {
+                item.classList.remove("add-md");
+                if (item.tagName === "head") {
+                    newDoc.head.innerHTML += item.innerHTML;
+                } else {
+                    newDoc.body.innerHTML += item.outerHTML;
+                }
+            })
+            document.replaceChild(newDoc.documentElement, document.documentElement);
+        } catch (error) {
+            console.error("loading error!", error);
+            getError(error.code);
+        }
+    }else{
+        div.innerHTML = `
+<h1>md-file功能</h1>
+<p>更纯洁的站内Markdown展示。</p>
+`;
+    }
+</script>

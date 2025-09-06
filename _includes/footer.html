@@ -8,7 +8,7 @@
     <div style="height: 80px;"></div>
     {% include translateText.html %}
     <script>
-        translate.execute();
+        execute();
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll("select").forEach((select) => {
                 select.addEventListener('mouseenter', function () {

@@ -11,9 +11,28 @@ body {
     position: fixed;
 }
 
+.headerItem {
+    margin: 10px;
+}
+
+
 a {
-    color: #7f7fff;
     text-decoration: none;
+}
+a:link {
+    color: #7f7fff;
+}
+a:visited {
+    color: #8f8f8f;
+}
+a:hover {
+    color: #aaaa00;
+}
+a:active {
+    color: #ff7f7f;
+}
+.link-a {
+    color: #7f7fff;
 }
 
 .header {
@@ -27,13 +46,6 @@ a {
     position: fixed;
     z-index: 999;
 }
-
-.headerItem {
-    color: #f5f5f7;
-    margin: 10px;
-    text-decoration: none;
-}
-
 .toc-ignore {
 }
 
@@ -123,4 +135,12 @@ code {
 
 pre {
     max-width: 90%;
+}
+
+.heading-show {
+    text-decoration: underline #ffffff solid 2px;
+}
+
+.page {
+    max-width: 80%;
 }

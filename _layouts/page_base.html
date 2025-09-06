@@ -5,8 +5,8 @@ layout: default
 <script>
     document.addEventListener("DOMContentLoaded", changeBgText);
 </script>
-<link rel="dns-prefetch" href="//cdn.mathjax.org" xmlns="http://www.w3.org/1999/html"/>
-<link rel="stylesheet" href="../prism.css"/>
+<link class="add-md" rel="dns-prefetch" href="//cdn.mathjax.org" xmlns="http://www.w3.org/1999/html"/>
+<link class="add-md" rel="stylesheet" href="../prism.css"/>
 <style>
     .toc-container {
         position: fixed;
@@ -30,14 +30,6 @@ layout: default
     .toc-container li {
         margin: 5px 0;
     }
-
-    .page {
-        max-width: 80%;
-    }
-
-    .heading-show {
-        text-decoration: underline #ffffff solid 2px;
-    }
 </style>
 <div class="toc-container">
     <h1>目录</h1>
@@ -45,9 +37,8 @@ layout: default
 </div>
 <article class="page">
     <div id="page-header">
-        <p>
         <h1 class="toc-ignore">{{ page.title }}</h1>
-        <div class="meta" style="font-size: 12px;">
+        <address class="meta" style="font-size: 12px;">
             创作日期：{{ page.date | date: "%Y年%m月%d日" }}
             <br/>
             创作者：{{ page.author }}
@@ -56,14 +47,14 @@ layout: default
             <br/>
             注：
             <br/>
-            我的文章所有下载<a href="https://gitcode.com/Leo-hele/download_files/">内容</a>、<a
+            文章所有下载<a href="https://gitcode.com/Leo-hele/download_files/">内容</a>、<a
                 href="https://gitee.com/Leo-hele/picGo-image">图片</a>均由<a href="https://gitcode.com">GitCode</a>、<a
                 href="https://gitee.com">Gitee</a>托管，中国访问速度较快。如果您在国外，可以在官网下载。
             <br/>
             如果您发现内容有误或需要更新，请在<a href="https://github.com/Leo-hele/Leo-hele.github.io/issues">Github</a>上提交Issue、PR等，或<a
                 href="mailto:{{ page.email }}?subject=建议">联系作者</a>，谢谢！
             <br/>
-        </div>
+        </address>
         <a download="{{ page.title }}.html" id="download-html">下载html文件</a>
         <script>
             const a = document.getElementById("download-html");
@@ -71,11 +62,11 @@ layout: default
         </script>
         <hr/>
     </div>
-    <div id="md-file">
+    <div id="md-file" class="add-md">
         {{ content }}
     </div>
 </article>
-<script>
+<script class="add-md">
     {% raw %}
 
     function addLiquid() {
@@ -295,6 +286,6 @@ layout: default
         })
     })
 </script>
-<script id="MathJax-script" async
+<script class="add-md" id="MathJax-script" async
         src="../js/mathjax/es5/tex-chtml.js">
 </script>

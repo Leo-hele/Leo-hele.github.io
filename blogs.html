@@ -46,7 +46,7 @@ title: 文章广场
         color: black;
     }
 
-    li::marker {
+    #search-class li::marker {
         display: none;
         content: "";
     }
@@ -58,6 +58,18 @@ title: 文章广场
         border-radius: 5px;
         background-color: #f9f9f9;
         color: black;
+    }
+    #blog-container {
+        position: fixed;
+        right: 100%;
+        top: 100px;
+        bottom: 100%;
+        overflow: auto;
+        padding: 10px;
+        background: #ffffff;
+        color: #000000;
+        border: groove #cccccc 3px;
+        border-radius: 25px;
     }
 </style>
 <button id="showSearch-button">筛选器</button>
@@ -81,6 +93,14 @@ title: 文章广场
 <div id="search-container">
     <p>加载中...</p>
 </div>
+<div id="blog-container">
+    <div id="blog-dec"></div>
+    <iframe id="blog-frame" style="display: none"></iframe>
+    <div id="show-blog"></div>
+</div>
+<script>
+    window.title = document.title;
+</script>
 <script>
     changeBgText();
     changeTime();
@@ -89,7 +109,7 @@ title: 文章广场
         const search = getParam("search");
         if (search) {
             document.getElementById("search-input").value = search;
-        }else{
+        } else {
             const cookieSearch = getCookie("search");
             if (cookieSearch) {
                 document.getElementById("search-input").value = cookieSearch;
@@ -105,7 +125,7 @@ title: 文章广场
             if (!checkbox) {
                 checkbox.click();
             }
-        }else{
+        } else {
             const cookieClass = getCookie("class");
             if (cookieClass) {
                 checksClass.add(cookieClass);
@@ -149,7 +169,7 @@ title: 文章广场
             search.style.display = "none";
             searchButton.innerHTML = "筛选器";
         }
-        translate.execute();
+        execute();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -182,9 +202,11 @@ title: 文章广场
     function loadSearch() {
         return loadJson("../search.json");
     }
+
     function setCookie(name, value) {
         document.cookie = `${name}=${value}; path=/; max-age=31536000`;
     }
+
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -199,6 +221,8 @@ title: 文章广场
     }
 
     async function updateSearch() {
+        const showBlog = document.getElementById("show-blog");
+        showBlog.innerHTML = '搜索中……';
         const Key = Keys[document.getElementById("key").value];
         const Cmp = Cmps[document.getElementById("cmp").value];
         const blogs = await loadSearch();
@@ -217,6 +241,8 @@ title: 文章广场
         })
         const searchContainer = document.getElementById("search-container");
         searchContainer.innerHTML = ''; // 清空现有内容
+        const blogFrame = document.getElementById("blog-frame");
+        blogFrame.src = '';
         if (searchBlogs.length === 0) {
             searchContainer.innerHTML = '<p>没有找到符合条件的文章</p>';
         } else {
@@ -224,15 +250,30 @@ title: 文章广场
                 const blogElement = document.createElement("div");
                 blogElement.className = "blog-item";
                 blogElement.innerHTML = `
-                    <h2><a href="${blog.url}">${blog.title}</a></h2>
-                    <p>分类: ${blog.class}</p>
-                    <p>日期: ${blog.date}</p>
+                    <a href="${blog.url}" target="_blank">
+                        <h2>${blog.title}</h2>
+                        <p>分类: ${blog.class}</p>
+                        <p>日期: ${blog.date}</p>
+                    </a>
                 `;
                 searchContainer.appendChild(blogElement);
+                blogElement.addEventListener("mouseenter", () => {
+                    blogFrame.src = blog.url;
+                    addLoad(() => {
+                        if (blog.url.startsWith("{{ site.url }}")) {
+                            showBlog.innerHTML = blogFrame.getElementById("md-file").innerHTML;
+                        }else{
+                            showBlog.innerHTML = blogFrame.innerHTML;
+                        }
+                    }, blogFrame);
+                });
             });
+            const searchInput = document.getElementById("search-input").value;
+            document.title = `${searchInput} - ${window.title}`;
         }
-        translate.execute();
+        execute();
         setCookieSearch();
+        showBlog.innerHTML = '<p>悬停文章预览</p>';
     }
 
     function getClass(className) {
@@ -260,13 +301,13 @@ title: 文章广场
             }
             setCheckClass(div);
         });
-        if (! checked) {
+        if (!checked) {
             checkbox.dataUOC = false;
         }
         setCheckClass(checkbox);
     }
 
-    function setCheckClass(checkbox){
+    function setCheckClass(checkbox) {
         const state = checkbox.children[0].checked;
         const className = getClass(checkbox.children[0].value);
         if (state) {
@@ -275,6 +316,7 @@ title: 文章广场
             checksClass.delete(className);
         }
     }
+
     function setCheckbox(checkbox) {
         setCheckClass(checkbox);
         const parent = checkbox.parentElement.parentElement.parentElement;

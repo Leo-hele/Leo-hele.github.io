@@ -11,11 +11,7 @@ link: /user/
             const users = await loadJson("../users.json");
             const user = users[user_path];
             if (user === undefined) {
-                const notFound = loadFile("../404.html");
-                notFound.then((data) => {
-                    document.body.innerHTML = data;
-                });
-                return;
+                return getError(404);
             }
             const userDiv = document.getElementById("user");
             userDiv.innerHTML = `

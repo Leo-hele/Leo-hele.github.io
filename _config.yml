@@ -12,8 +12,10 @@ other-urls:
     link: https://github.com/Leo-hele/
   - name: Gitee
     link: https://gitee.com/Leo-hele/
+  - namme: Gitcode
+    link: https://gitcode.com/Leo-hele/
   - name: 洛谷
-    link: https://www.luogu.com.cn/user/1068806/
+    link: https://www.luogu.com.cn/user/1068806
 imgs:
     - name: search
       link: https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/search.png
@@ -29,6 +31,8 @@ collections:
   robots.txt:
     output: true
     permalink: /robots.txt
+  com.chrome.devtools.json:
+    output: true
 gems:
   - jekyll-sitemap
   - liquid
