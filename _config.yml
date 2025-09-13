@@ -20,7 +20,7 @@ imgs:
     - name: search
       link: https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/search.png
 baseurl: ""
-url: "localhost:4000"
+url: ""
 usersNum: 1
 users:
   - name: Leo-hele
