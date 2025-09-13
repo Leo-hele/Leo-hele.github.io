@@ -4,41 +4,42 @@ link: md-file/
 ---
 <div id="show-div"></div>
 <script type="module">
-    const baseurl = window.location.href;
+    const baseurl = w$.location.href;
     const url = baseurl.replace("{{ page.link }}", "");
-    const div = document.getElementById("show-div");
-    if (url != "{{ site.url }}/") {
-        div.innerHTML = `
+    const div = $("#show-div");
+    if (url !== "{{ site.url }}/") {
+        div.html(`
 <div>
     <h1>正在加载……</h1>
     <p>如果长时间没有反应，请检查链接是否正确。</p>
-</div>`;
+</div>`);
         try {
             const data = await loadFile(url);
             const parser = new DOMParser();
             const fileDoc = parser.parseFromString(data, "text/html");
-            const add = fileDoc.querySelectorAll(".add-md");
-            add.forEach((item) => {
-                console.log(item);
-            })
-            const newDoc = parser.parseFromString("<!DOCTYPE html><html></html>", "text/html");
-            add.forEach((item) => {
-                item.classList.remove("add-md");
-                if (item.tagName === "head") {
-                    newDoc.head.innerHTML += item.innerHTML;
+            const add = $(fileDoc).find(".add-md");
+            add.each(function() {
+                console.log(this);
+            });
+            const newDoc = $(parser.parseFromString("<!DOCTYPE html><html></html>", "text/html"));
+            add.each(function() {
+                const item = $(this);
+                item.removeClass("add-md");
+                if (item.prop("tagName") === "head") {
+                    newDoc.find("head").append(item.html());
                 } else {
-                    newDoc.body.innerHTML += item.outerHTML;
+                    newDoc.find("body").append(item);
                 }
-            })
-            document.replaceChild(newDoc.documentElement, document.documentElement);
+            });
+            $("html").html(newDoc.find("html").html());
         } catch (error) {
             console.error("loading error!", error);
             getError(error.code);
         }
     }else{
-        div.innerHTML = `
+        div.html(`
 <h1>md-file功能</h1>
 <p>更纯洁的站内Markdown展示。</p>
-`;
+`);
     }
 </script>

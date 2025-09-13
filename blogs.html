@@ -59,6 +59,7 @@ title: 文章广场
         background-color: #f9f9f9;
         color: black;
     }
+
     #blog-container {
         position: fixed;
         right: 100%;
@@ -70,6 +71,7 @@ title: 文章广场
         color: #000000;
         border: groove #cccccc 3px;
         border-radius: 25px;
+        z-index: 1000;
     }
 </style>
 <button id="showSearch-button">筛选器</button>
@@ -95,11 +97,10 @@ title: 文章广场
 </div>
 <div id="blog-container">
     <div id="blog-dec"></div>
-    <iframe id="blog-frame" style="display: none"></iframe>
-    <div id="show-blog"></div>
+    <iframe id="blog-frame"></iframe>
 </div>
 <script>
-    window.title = document.title;
+    window.title = $(document).attr('title');
 </script>
 <script>
     changeBgText();
@@ -108,11 +109,11 @@ title: 文章广场
     function getSearch() {
         const search = getParam("search");
         if (search) {
-            document.getElementById("search-input").value = search;
+            $("#search-input").val(search);
         } else {
             const cookieSearch = getCookie("search");
             if (cookieSearch) {
-                document.getElementById("search-input").value = cookieSearch;
+                $("#search-input").val(cookieSearch);
             }
         }
         updateSearch();
@@ -121,67 +122,75 @@ title: 文章广场
     function getSelectClass() {
         const selectClass = getParam("class");
         if (selectClass) {
-            const checkbox = document.getElementById("search-class").querySelector(`input[id="/所有分类${selectClass}"]`);
-            if (!checkbox) {
+            const classes = selectClass.split(',');
+            classes.forEach((item) => {
+                const checkbox = $("#search-class").find(`input[id="/所有分类${item}"]`);
                 checkbox.click();
-            }
+                checksClass.add(item);
+            });
         } else {
-            const cookieClass = getCookie("class");
-            if (cookieClass) {
-                checksClass.add(cookieClass);
+            let cookieClass = getCookie("class");
+            if (!cookieClass) {
+                cookieClass = getClasses();
+                setCookie("class", cookieClass);
             }
+            cookieClass.forEach((item) => {
+                const checkbox = $("#search-class").find(`input[id="/所有分类${item}"]`);
+                checkbox.click();
+                checksClass.add(item);
+            });
         }
         updateSearch();
     }
 
     function InitSort() {
-        const keySelect = document.getElementById("key");
-        const cmpSelect = document.getElementById("cmp");
+        const keySelect = $("#key");
+        const cmpSelect = $("#cmp");
 
         // 清空现有选项
-        keySelect.innerHTML = '';
-        cmpSelect.innerHTML = '';
+        keySelect.empty();
+        cmpSelect.empty();
 
         // 添加键选项
         for (const key in Keys) {
-            const option = document.createElement("option");
-            option.value = key;
-            option.textContent = KeyNames[key];
-            keySelect.appendChild(option);
+            const option = $("<option>");
+            option.val(key);
+            option.text(KeyNames[key]);
+            keySelect.append(option);
         }
 
         // 添加比较选项
         for (const cmp in Cmps) {
-            const option = document.createElement("option");
-            option.value = cmp;
-            option.textContent = CmpNames[cmp];
-            cmpSelect.appendChild(option);
+            const option = $("<option>");
+            option.val(cmp);
+            option.text(CmpNames[cmp]);
+            cmpSelect.append(option);
         }
     }
 
     function ShowSearch() {
-        const search = document.getElementById("search");
-        const searchButton = document.getElementById("showSearch-button");
-        if (search.style.display === "none" || search.style.display === "") {
-            search.style.display = "block";
-            searchButton.innerHTML = "隐藏筛选器";
+        const search = $("#search");
+        const searchButton = $("#showSearch-button");
+        if (search.css("display") === "none" || search.css("display") === "") {
+            search.show();
+            searchButton.html("隐藏筛选器");
         } else {
-            search.style.display = "none";
-            searchButton.innerHTML = "筛选器";
+            search.hide();
+            searchButton.html("筛选器");
         }
         execute();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("showSearch-button").addEventListener("click", ShowSearch);
+    $(document).ready(() => {
+        $("#showSearch-button").on("click", ShowSearch);
     });
 
     function Check(checkbox) {
-        const childrenCheckboxes = checkbox.children[2].querySelectorAll('input');
+        const childrenCheckboxes = $(checkbox).children().eq(2).find('input');
         let checkedCount = 0;
         let uncheckedCount = 0;
-        childrenCheckboxes.forEach(child => {
-            if (child.checked) {
+        childrenCheckboxes.each((index, child) => {
+            if ($(child).prop("checked")) {
                 checkedCount++;
             } else {
                 uncheckedCount++;
@@ -203,28 +212,18 @@ title: 文章广场
         return loadJson("../search.json");
     }
 
-    function setCookie(name, value) {
-        document.cookie = `${name}=${value}; path=/; max-age=31536000`;
-    }
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
     function setCookieSearch() {
-        const search = document.getElementById("search-input").value;
+        const search = $("#search-input").val();
         const selectClass = checksClass;
         setCookie("search", search);
         setCookie("class", selectClass);
     }
 
     async function updateSearch() {
-        const showBlog = document.getElementById("show-blog");
-        showBlog.innerHTML = '搜索中……';
-        const Key = Keys[document.getElementById("key").value];
-        const Cmp = Cmps[document.getElementById("cmp").value];
+        const searchContainer = $("#search-container");
+        searchContainer.html('搜索中……');
+        const Key = Keys[$("#key").val()];
+        const Cmp = Cmps[$("#cmp").val()];
         const blogs = await loadSearch();
         const searchBlogs = [];
         // console.log("updateSearch", checksClass);
@@ -238,42 +237,38 @@ title: 文章广场
         searchBlogs.sort((a, b) => {
             // console.log(a, b, Key(a), Key(b), Cmp(Key(a), Key(b)), Key, Cmp);
             return Cmp(Key(a), Key(b));
-        })
-        const searchContainer = document.getElementById("search-container");
-        searchContainer.innerHTML = ''; // 清空现有内容
-        const blogFrame = document.getElementById("blog-frame");
-        blogFrame.src = '';
+        });
+        searchContainer.empty(); // 清空现有内容
+        const blogFrame = $("#blog-frame");
+        const blogDec = $("#blog-dec");
+        blogFrame.attr("src", '');
+        blogDec.empty();
         if (searchBlogs.length === 0) {
-            searchContainer.innerHTML = '<p>没有找到符合条件的文章</p>';
+            searchContainer.html('<p>没有找到符合条件的文章</p>');
         } else {
             searchBlogs.forEach(blog => {
-                const blogElement = document.createElement("div");
-                blogElement.className = "blog-item";
-                blogElement.innerHTML = `
+                const blogElement = $("<div>");
+                blogElement.addClass("blog-item");
+                blogElement.html(`
                     <a href="${blog.url}" target="_blank">
                         <h2>${blog.title}</h2>
                         <p>分类: ${blog.class}</p>
                         <p>日期: ${blog.date}</p>
                     </a>
-                `;
-                searchContainer.appendChild(blogElement);
-                blogElement.addEventListener("mouseenter", () => {
-                    blogFrame.src = blog.url;
-                    addLoad(() => {
-                        if (blog.url.startsWith("{{ site.url }}")) {
-                            showBlog.innerHTML = blogFrame.getElementById("md-file").innerHTML;
-                        }else{
-                            showBlog.innerHTML = blogFrame.innerHTML;
-                        }
-                    }, blogFrame);
+                `);
+                const a = blogElement.find("a");
+                searchContainer.append(blogElement);
+                blogElement.on("mouseenter", () => {
+                    blogFrame.attr("src", blog.url);
+                    blogDec.html(a.html());
                 });
             });
-            const searchInput = document.getElementById("search-input").value;
-            document.title = `${searchInput} - ${window.title}`;
+            const searchInput = $("#search-input").val();
+            $(document).attr('title', `${searchInput} - ${window.title}`);
         }
         execute();
         setCookieSearch();
-        showBlog.innerHTML = '<p>悬停文章预览</p>';
+        $("#blog-frame").contents().find("body").html('<p>悬停文章预览</p>');
     }
 
     function getClass(className) {
@@ -282,24 +277,24 @@ title: 文章广场
 
     function checkCheckbox(checkbox, childStates) {
         checkbox.indeterminate = false;
-        const children = checkbox.children[2].querySelectorAll('input');
-        const checked = checkbox.children[0].checked;
+        const children = $(checkbox).children().eq(2).find('input');
+        const checked = $(checkbox).children().eq(0).prop("checked");
         if (checked) {
             checkbox.dataUOC = true;
         }
-        children.forEach(child => {
-            const div = child.parentElement;
+        children.each((index, child) => {
+            const div = $(child).parent();
             div.dataUOC = false;
             if (checked) {
-                childStates.set(div, child.checked);
-                child.checked = true;
+                childStates.set(div[0], $(child).prop("checked"));
+                $(child).prop("checked", true);
             } else {
                 if (!checkbox.dataUOC) {
-                    childStates.set(div, false);
+                    childStates.set(div[0], false);
                 }
-                child.checked = childStates.get(div);
+                $(child).prop("checked", childStates.get(div[0]));
             }
-            setCheckClass(div);
+            setCheckClass(div[0]);
         });
         if (!checked) {
             checkbox.dataUOC = false;
@@ -308,8 +303,8 @@ title: 文章广场
     }
 
     function setCheckClass(checkbox) {
-        const state = checkbox.children[0].checked;
-        const className = getClass(checkbox.children[0].value);
+        const state = $(checkbox).children().eq(0).prop("checked");
+        const className = getClass($(checkbox).children().eq(0).val());
         if (state) {
             checksClass.add(className);
         } else {
@@ -319,55 +314,48 @@ title: 文章广场
 
     function setCheckbox(checkbox) {
         setCheckClass(checkbox);
-        const parent = checkbox.parentElement.parentElement.parentElement;
-        if (parent !== undefined && parent.id !== "search-class") {
-            const parentCheckbox = parent.querySelector("input");
-            const checkState = Check(parent);
+        const parent = $(checkbox).parent().parent().parent();
+        if (parent.length && parent.attr("id") !== "search-class") {
+            const parentCheckbox = parent.find("input");
+            const checkState = Check(parent[0]);
             if (checkState === 1) {
-                parentCheckbox.checked = true;
-                parentCheckbox.indeterminate = false;
+                parentCheckbox.prop("checked", true);
+                parentCheckbox.prop("indeterminate", false);
             } else if (checkState === 0) {
-                parentCheckbox.checked = false;
-                parentCheckbox.indeterminate = false;
+                parentCheckbox.prop("checked", false);
+                parentCheckbox.prop("indeterminate", false);
             } else {
-                parentCheckbox.checked = false;
-                parentCheckbox.indeterminate = true;
+                parentCheckbox.prop("checked", false);
+                parentCheckbox.prop("indeterminate", true);
             }
-            setCheckbox(parent);
+            setCheckbox(parent[0]);
         }
     }
 
     function Option(class_, base_class) {
         base_class += "/" + class_.name;
-        let alloptions = document.createElement("div");
-        let optionInput = document.createElement("input");
-        optionInput.type = "checkbox";
-        optionInput.checked = false;
-        optionInput.value = base_class;
-        optionInput.id = base_class;
-        alloptions.appendChild(optionInput);
-        let optionLabel = document.createElement("label");
-        optionLabel.className = "class-select";
-        optionLabel.for = base_class;
-        optionLabel.textContent = class_.name;
+        let alloptions = $('<div>').get(0);
+        let optionInput = $('<input>').prop({type: 'checkbox', checked: false, value: base_class, id: base_class}).get(0);
+        $(alloptions).append(optionInput);
+        let optionLabel = $('<label>').addClass("class-select").attr("for", base_class).text(class_.name).get(0);
+        $(alloptions).append(optionLabel);
         const children = class_.children;
-        let children_list = document.createElement("ul");
+        let children_list = $('<ul>').get(0);
         for (let i in children) {
             const class_ = children[i];
-            let children_option = document.createElement("li");
-            children_option.appendChild(Option(class_, base_class));
-            children_list.appendChild(children_option);
+            let children_option = $('<li>').get(0);
+            $(children_option).append(Option(class_, base_class));
+            $(children_list).append(children_option);
         }
-        alloptions.appendChild(optionLabel);
+        $(alloptions).append(children_list);
         // 保存子节点原始状态
         const childStates = new WeakMap();
-        optionInput.addEventListener('click', e => {
-            const parent = e.target.parentElement;
+        $(optionInput).on('click', e => {
+            const parent = $(e.target).parent().get(0);
             checkCheckbox(parent, childStates);
             setCheckbox(parent);
             updateSearch();
         });
-        alloptions.appendChild(children_list);
         return alloptions;
     }
 
@@ -391,32 +379,26 @@ title: 文章广场
             });
 
             return classTree;
-        })
+        });
     }
-
-    function initSearch(select) {
-        select.querySelector("input").click();
-    }
-
     // 修改InitSelect中的调用方式
     async function InitSelect() {
         const classes = await getClasses();
-        const select = document.getElementById("search-class");
-        select.innerHTML = '';
-        const ul = document.createElement("ul");
-        select.appendChild(ul);
-        const li = document.createElement("li");
+        const select = $("#search-class");
+        select.empty();
+        const ul = $('<ul>').get(0);
+        select.append(ul);
+        const li = $('<li>').get(0);
         const option = Option(classes, "");
-        li.appendChild(option);
-        ul.appendChild(li);
-        initSearch(select);
+        $(li).append(option);
+        $(ul).append(li);
         getSelectClass();
         getSearch();
     }
 
-    document.addEventListener('DOMContentLoaded', InitSelect);
+    $(document).ready(InitSelect);
     InitSort();
-    document.getElementById("search-input").addEventListener("keydown", e => {
+    $("#search-input").on("keydown", e => {
         if (e.key === "Enter") {
             updateSearch();
         }

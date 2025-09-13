@@ -57,8 +57,8 @@ layout: default
         </address>
         <a download="{{ page.title }}.html" id="download-html">下载html文件</a>
         <script>
-            const a = document.getElementById("download-html");
-            a.href = window.location.href;
+            const a = $("#download-html");
+            a.attr("href", window.location.href);
         </script>
         <hr/>
     </div>
@@ -144,7 +144,7 @@ layout: default
             h$.innerHTML = "#";
             h$.style.display = "none";
             heading.appendChild(h$);
-            addLoad(() => {
+            d$.ready(() => {
                 const h$ = heading.querySelector(".heading-show");
                 heading.addEventListener("mouseenter", () => {
                     h$.style.display = "inline";
@@ -196,7 +196,7 @@ layout: default
     // 在页面加载完成后生成目录
     window.addEventListener('DOMContentLoaded', generateTOC);
 
-    (function loadPrism() {
+    function loadPrism() {
         const prismScript = document.createElement('script');
         prismScript.src = '../js/prism.js';
 
@@ -215,7 +215,8 @@ layout: default
             Prism.highlightAll();
         };
         document.head.appendChild(prismScript);
-    })();
+    }
+    loadPrism();
 
     function setTag(className, tags) {
         doSe(className, (element) => {
@@ -276,7 +277,7 @@ layout: default
         }
     };
 
-    addLoad(function () {
+    d$.ready(function () {
         document.querySelectorAll("a").forEach((item) => {
             let url = item.href;
             if (!url.startsWith("{{ site.url }}")) {
