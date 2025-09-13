@@ -7,6 +7,7 @@ base.js
     每个页面都需要导入
 */
 const d$ = $(document), w$ = $(window);
+const Url = location.host;
 function delay(time) {
     return new Promise(resolve => {
         setTimeout(resolve, time);

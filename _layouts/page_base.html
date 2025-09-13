@@ -280,9 +280,9 @@ layout: default
     d$.ready(function () {
         document.querySelectorAll("a").forEach((item) => {
             let url = item.href;
-            if (!url.startsWith("{{ site.url }}")) {
+            if (!url.startsWith(Url)) {
                 item.target = "_blank";
-                item.href = "{{ site.url }}/link.html?url=" + url;
+                item.href = `${Url}/link.html?url=${encodeURIComponent(url)}`;
             }
         })
     })

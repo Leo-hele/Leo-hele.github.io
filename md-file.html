@@ -7,7 +7,7 @@ link: md-file/
     const baseurl = w$.location.href;
     const url = baseurl.replace("{{ page.link }}", "");
     const div = $("#show-div");
-    if (url !== "{{ site.url }}/") {
+    if (url !== Url + "/") {
         div.html(`
 <div>
     <h1>正在加载……</h1>
