@@ -1,0 +1,146 @@
+body {
+    background-color: #000000;
+    background-size: cover;
+    background-position: center;
+    color: #ffffff;
+    user-select: none;
+    margin: 0;
+}
+
+.div-fixid {
+    position: fixed;
+}
+
+.headerItem {
+    margin: 10px;
+}
+
+
+a {
+    text-decoration: none;
+}
+a:link {
+    color: #7f7fff;
+}
+a:visited {
+    color: #8f8f8f;
+}
+a:hover {
+    color: #aaaa00;
+}
+a:active {
+    color: #ff7f7f;
+}
+.link-a {
+    color: #7f7fff;
+}
+
+.header {
+    background-color: #313132;
+    height: 44px;
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    position: fixed;
+    z-index: 999;
+}
+.toc-ignore {
+}
+
+img {
+    display: block;
+}
+
+pre {
+    width: 100%;
+    padding-top: 40px;
+    overflow: auto;
+    max-height: 400px;
+    background-color: rgba(128, 128, 128, 1);
+    border-radius: 8px;
+    border: inset #ffffff;
+    user-select: text;
+}
+
+code {
+    user-select: text;
+}
+
+.MathJax_Display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    user-select: text;
+}
+
+.heading-a {
+    color: #ffffff;
+    text-decoration: underline #0000ff solid 5px;
+    cursor: default;
+}
+
+.heading-aa {
+    text-decoration: underline #0000ff solid 5px;
+    cursor: pointer;
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 130px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+#translateSelectLanguage {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border: groove;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.no-wrap {
+    white-space: nowrap;
+}
+.no-wrap * {
+    display: inline-block;
+}
+.center-pos {
+    transform: translate(-50%, -50%);
+}
+.center-x {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.center-y {
+    top: 50%;
+    transform: translateY(-50%);
+}
+.center-all {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+pre {
+    max-width: 90%;
+}
+
+.heading-show {
+    text-decoration: underline #ffffff solid 2px;
+}
+
+.page {
+    max-width: 80%;
+}

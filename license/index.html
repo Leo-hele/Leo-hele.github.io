@@ -1,0 +1,512 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head class="add-md">
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>版权申明 - Leo's site</title>
+    <link type="text/css" rel="stylesheet" href="../style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.cookie.min.js"></script>
+    <script src="../js/base.min.js"></script>
+    <link rel="icon" href="https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico" type="image/x-icon"/>
+</head>
+<body>
+<div id="header-container">
+    <div id="header">
+    <div class="header" style="position: relative;">
+      
+      <a href="/" class="headerItem" style="color: #f5f5f7;">
+        首页
+      </a>
+      
+      <a href="/about/" class="headerItem" style="color: #f5f5f7;">
+        关于
+      </a>
+      
+      <a href="/blogs/" class="headerItem" style="color: #f5f5f7;">
+        文章
+      </a>
+      
+    </div>
+
+    <h1 class="toc-ignore">欢迎来到Leo的网站</h1>
+    <noscript>
+        <h2 class="toc-ignore">您的浏览器不支持JavaScript</h2>
+        <p>请启用JavaScript以获得更好的体验</p>
+    </noscript>
+</div>
+    <div class="div-fixid center-all" style="color: #ffff00;">
+        <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
+    </div>
+    <button id="back-to-top" class="back">↑</button>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const backToTopButton = document.getElementById("back-to-top");
+        backToTopButton.style.display = "none";
+
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 0) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        });
+
+        backToTopButton.addEventListener("click", function () {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        });
+    });
+</script>
+<script>
+    d$.ready(function () {
+        let direction = {
+            left: false,
+            top: false,
+            right: false,
+            bottom: false
+        }; //上下左右
+
+        setInterval(function () {
+            if (direction.left) {
+                window.scrollBy(-10, 0);
+            } else if (direction.top) {
+                window.scrollBy(0, -10);
+            } else if (direction.right) {
+                window.scrollBy(10, 0);
+            } else if (direction.bottom) {
+                window.scrollBy(0, 10);
+            }
+        }, 1);
+
+        document.addEventListener("keydown", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = true;
+                    break;
+                case "ArrowUp":
+                    direction.top = true;
+                    break;
+                case "ArrowRight":
+                    direction.right = true;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = true;
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = false;
+                    break;
+                case "ArrowUp":
+                    direction.top = false;
+                    break;
+                case "ArrowRight":
+                    direction.right = false;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = false;
+                    break;
+            }
+        });
+    })
+</script>
+    <script>
+        function changeBgText() {
+            const bgText = document.getElementById("bg-text");
+            if (bgText.style.display === "none") {
+                bgText.style.display = "block";
+            } else {
+                bgText.style.display = "none";
+            }
+        }
+
+        window.changeBgText = changeBgText;
+    </script>
+    <script src="../js/getDate.js"></script>
+<footer>
+    <button id='time-btn' style='position: fixed; bottom: 15px; right: 120px; border: groove;'>隐藏时间</button>
+    <p id='time' style='position: fixed; bottom: 0; right: 0;'>
+        当前时间:<br/>
+        <span id="time-show"></span>
+    </p>
+    <script>
+        function setTime() {
+            document.getElementById("time-show").innerHTML = date().toString();
+        }
+
+        setTime();
+        setInterval(setTime, 1000);
+
+        function changeTime() {
+            const timeParagraph = document.querySelector('p#time');
+            const timeButton = document.getElementById('time-btn');
+            if (timeParagraph.style.display === 'none') {
+                timeParagraph.style.display = 'block';
+                timeButton.textContent = '隐藏时间';
+            } else {
+                timeParagraph.style.display = 'none';
+                timeButton.textContent = "显示时间";
+                timeButton.style.display = 'none';
+            }
+        }
+
+        document.getElementById('time-btn').addEventListener('click', function () {
+            changeTime();
+            if (this.style.display === 'none') {
+                this.style.display = 'block';
+            }
+        });
+    </script>
+</footer>
+    <script src="../js/translate.js"></script>
+<script type="module">
+    const loaded = await loadJson("../lang.json");
+    const btot = loaded[0], ttob = loaded[1];
+    translate.service.use('client.edge');
+    const user_language = navigator.language;
+    // console.log(user_language);
+    translate.language.setDefaultTo(btot[user_language]);
+    translate.language.setLocal(user_language);
+    translate.listener.start();
+    translate.selectLanguageTag.show = true;
+    // document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
+    //     (item) => {
+    //         console.log(item.value);
+    //     }
+    // )
+</script>
+</div>
+<div id="body-content">
+    <script src="../js/download.js" type="module"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", changeBgText);
+</script>
+<link class="add-md" rel="dns-prefetch" href="//cdn.mathjax.org" xmlns="http://www.w3.org/1999/html"/>
+<link class="add-md" rel="stylesheet" href="../prism.css"/>
+<style>
+    .toc-container {
+        position: fixed;
+        left: 80%;
+        max-width: 20%;
+        max-height: calc(100% - 90px);
+        overflow: auto;
+        top: calc((100% - 90px) / 2);
+        transform: translateY(-50%);
+    }
+
+    * {
+        max-width: 100%;
+    }
+
+    .toc-container ul {
+        list-style: none;
+        padding-left: 20px;
+    }
+
+    .toc-container li {
+        margin: 5px 0;
+    }
+</style>
+<div class="toc-container">
+    <h1>目录</h1>
+    <div id="toc"></div>
+</div>
+<article class="page">
+    <div id="page-header">
+        <h1 class="toc-ignore">版权申明</h1>
+        <address class="meta" style="font-size: 12px;">
+            创作日期：2025年08月23日
+            <br/>
+            创作者：Leo
+            <br/>
+            分类：/文章/关于
+            <br/>
+            注：
+            <br/>
+            文章所有下载<a href="https://gitcode.com/Leo-hele/download_files/">内容</a>、<a
+                href="https://gitee.com/Leo-hele/picGo-image">图片</a>均由<a href="https://gitcode.com">GitCode</a>、<a
+                href="https://gitee.com">Gitee</a>托管，中国访问速度较快。如果您在国外，可以在官网下载。
+            <br/>
+            如果您发现内容有误或需要更新，请在<a href="https://github.com/Leo-hele/Leo-hele.github.io/issues">Github</a>上提交Issue、PR等，或<a
+                href="mailto:hele199380@hotmail.com?subject=建议">联系作者</a>，谢谢！
+            <br/>
+        </address>
+        <a download="版权申明.html" id="download-html">下载html文件</a>
+        <script>
+            const a = $("#download-html");
+            a.attr("href", window.location.href);
+        </script>
+        <hr/>
+    </div>
+    <div id="md-file" class="add-md">
+        <h2 id="版权申明">版权申明</h2>
+
+
+    </div>
+</article>
+<script class="add-md">
+    
+
+    function addLiquid() {
+        const md = document.getElementById("md-file");
+        let res = md.innerHTML.replaceAll("{\\%", "{%");
+        res = res.replaceAll("{\\{", "{{");
+        md.innerHTML = res;
+    }
+
+    addLiquid();
+    
+
+    function Query(className) {
+        const mdfile = document.getElementById("md-file");
+        const elements = mdfile.querySelectorAll(`${className}`);
+        return elements;
+    }
+
+    function doSe(className, callback) {
+        let elements = Query(className);
+        if (elements === null) return;
+        elements.forEach((element) => {
+            callback(element);
+        });
+    }
+
+    function new_innerHTML(parent, callback, addtag = true) {
+        let tag = ["", ""];
+        if (addtag) {
+            tag = parent.outerHTML.split(parent.innerHTML);
+        }
+        let new_inner = tag[0];
+        const children = parent.childNodes;
+        const noTag = ['A'];
+
+        children.forEach((celement) => {
+            let element = celement;
+            if ("tagName" in element && noTag.includes(element.tagName.toUpperCase())) {
+                element.className += " " + 'heading-aa';
+                new_inner += element.outerHTML;
+            } else if (element.children) {
+                new_inner += new_innerHTML(element, callback);
+            } else {
+                new_inner += callback(element);
+            }
+        });
+        new_inner += tag[1];
+        return new_inner;
+    }
+
+    function generateTOC() {
+        const headings = Array.from(Query("h1, h2, h3, h4, h5, h6"))
+            .filter(heading => heading.className !== 'toc-ignore')
+            .map((heading, index) => {
+                // 增强ID生成安全性
+                let id = heading.textContent;
+                id += `-heading${index}`;
+                heading.id = id;
+                return heading;
+            });
+
+        const tocContainer = document.getElementById('toc');
+        let currentLevel = 1;
+        let tocHTML = '<ul style="padding-left: 0">';
+        headings.forEach((cheading, index) => {
+            let heading = cheading;
+            heading.className += "no-wrap";
+            const id = cheading.id;
+            heading.innerHTML = new_innerHTML(heading, (element) => {
+                const text = `<a href="#${id}" class="heading-a">${element.textContent}</a>`;
+                return text;
+            }, false);
+            const h$ = document.createElement("p");
+            h$.className = "heading-show";
+            h$.innerHTML = "#";
+            h$.style.display = "none";
+            heading.appendChild(h$);
+            d$.ready(() => {
+                const h$ = heading.querySelector(".heading-show");
+                heading.addEventListener("mouseenter", () => {
+                    h$.style.display = "inline";
+                });
+                heading.addEventListener("mouseleave", () => {
+                    h$.style.display = "none";
+                });
+            });
+            const level = parseInt(heading.tagName.substring(1));
+            heading.innerHTML = " ".repeat(level - 1) + heading.innerHTML;
+
+            // 修复标签闭合逻辑
+            if (level > currentLevel) {
+                tocHTML += '<ul>'.repeat(level - currentLevel);
+            } else if (level < currentLevel) {
+                tocHTML += '</li></ul>'.repeat(currentLevel - level);
+            } else if (index !== 0) {
+                tocHTML += '</li>';
+            }
+
+            tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a><hr/>`;
+            currentLevel = level;
+        });
+
+        // 闭合最后未关闭的标签
+        tocHTML += '</li></ul>';
+        tocContainer.innerHTML = tocHTML;
+        tocContainer.style.display = 'block';
+
+        window.addEventListener('scroll', () => {
+            const links = tocContainer.querySelectorAll('a');
+            links.forEach(link => {
+                if (link.className !== 'heading-a') return;
+                const hash = link.getAttribute('href') || '';
+                const id = hash.startsWith('#') ? hash.slice(1) : null;
+
+                const heading = document.getElementById(id);
+                if (!heading) {
+                    console.warn('找不到对应标题:', id, '链接文本:', link.textContent);
+                    return;
+                }
+
+                const rect = heading.getBoundingClientRect();
+                link.classList.toggle('active', rect.top <= 100 && rect.bottom >= 100);
+            });
+        });
+    }
+
+    // 在页面加载完成后生成目录
+    window.addEventListener('DOMContentLoaded', generateTOC);
+
+    function loadPrism() {
+        const prismScript = document.createElement('script');
+        prismScript.src = '../js/prism.js';
+
+        prismScript.onload = function () {
+            // 确保启用行号插件
+            Prism.plugins.lineNumbers = true;
+
+            // 注册下载按钮
+            Prism.plugins.toolbar.registerButton('download', {
+                text: '下载代码',
+                onClick: function (env) {
+                    downloadCode(env.code, env.language);
+                }
+            });
+
+            Prism.highlightAll();
+        };
+        document.head.appendChild(prismScript);
+    }
+    loadPrism();
+
+    function setTag(className, tags) {
+        doSe(className, (element) => {
+            for (const key in tags) {
+                element.setAttribute(key, tags[key]);
+            }
+        });
+    }
+
+    setTag("pre", {
+        "class": "line-numbers",
+    });
+    setTag("code", {
+        "data-prismjs-copy": "复制",
+        "data-prismjs-copy-error": "复制失败",
+        "data-prismjs-copy-success": "复制成功",
+    });
+    setTag("img", {
+        "loading": "lazy",
+        "decoding": "async",
+        "class": "img-responsive",
+    });
+    doSe("img", img => {
+        if (!img.hasAttribute('data-error-handled')) {
+            img.setAttribute('data-error-handled', 'true');
+
+            // 创建备用元素
+            const fallback = document.createElement('div');
+            fallback.className = 'image-fallback';
+            fallback.innerHTML = `
+                    <a href="${img.src}" target="_blank">图片加载失败！查看原图</a>
+                `;
+            fallback.style.display = 'none';
+
+            // 包装图片
+            const container = document.createElement('div');
+            container.className = 'image-container';
+            img.parentNode.insertBefore(container, img);
+            container.appendChild(img);
+            container.appendChild(fallback);
+
+            // 添加错误处理
+            img.addEventListener('error', () => {
+                fallback.style.display = 'block';
+            });
+        }
+    });
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+            skipHtmlTags: [            //  HTML tags that won't be searched for math
+                'script', 'noscript', 'style', 'textarea', 'pre',
+                'code', 'annotation', 'annotation-xml'
+            ],
+            enableMenu: false,
+        }
+    };
+
+    d$.ready(function () {
+        document.querySelectorAll("a").forEach((item) => {
+            let url = item.href;
+            if (!url.startsWith(Url)) {
+                item.target = "_blank";
+                item.href = `${Url}/link.html?url=${encodeURIComponent(url)}`;
+            }
+        })
+    })
+</script>
+<script class="add-md" id="MathJax-script" async
+        src="../js/mathjax/es5/tex-chtml.js">
+</script>
+</div>
+<hr/>
+<div id="footer-container">
+    <footer>
+        <a href="../license" target="_blank">版权申明</a>
+        <br/>
+        <a href="../robots.txt" target="_blank">机器人协议</a>
+    </footer>
+    <div style="height: 80px;"></div>
+    <div id="text"></div>
+<script>
+    function translateText(text){
+        const divText = document.getElementById("text");
+        divText.innerHTML = text;
+        translate.execute();
+        const res = divText.innerHTML;
+        divText.innerHTML = "";
+        return res;
+    }
+</script>
+    <script>
+        execute();
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("select").forEach((select) => {
+                select.addEventListener('mouseenter', function () {
+                    select.multiple = "multiple";
+                })
+                select.addEventListener('mouseleave', function () {
+                    select.multiple = "";
+                })
+                select.addEventListener('change', function () {
+                    select.multiple = "";
+                })
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

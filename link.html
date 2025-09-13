@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head class="add-md">
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正在跳转…… - Leo's site</title>
+    <link type="text/css" rel="stylesheet" href="../style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.cookie.min.js"></script>
+    <script src="../js/base.min.js"></script>
+    <link rel="icon" href="https://gitee.com/Leo-hele/leo-hele.github.io-images/raw/main/favicon.ico" type="image/x-icon"/>
+</head>
+<body>
+<div id="header-container">
+    <div id="header">
+    <div class="header" style="position: relative;">
+      
+      <a href="/" class="headerItem" style="color: #f5f5f7;">
+        首页
+      </a>
+      
+      <a href="/about/" class="headerItem" style="color: #f5f5f7;">
+        关于
+      </a>
+      
+      <a href="/blogs/" class="headerItem" style="color: #f5f5f7;">
+        文章
+      </a>
+      
+    </div>
+
+    <h1 class="toc-ignore">欢迎来到Leo的网站</h1>
+    <noscript>
+        <h2 class="toc-ignore">您的浏览器不支持JavaScript</h2>
+        <p>请启用JavaScript以获得更好的体验</p>
+    </noscript>
+</div>
+    <div class="div-fixid center-all" style="color: #ffff00;">
+        <strong style="font-size: 40px;" id="bg-text">保持安静</strong>
+    </div>
+    <button id="back-to-top" class="back">↑</button>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const backToTopButton = document.getElementById("back-to-top");
+        backToTopButton.style.display = "none";
+
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 0) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        });
+
+        backToTopButton.addEventListener("click", function () {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        });
+    });
+</script>
+<script>
+    d$.ready(function () {
+        let direction = {
+            left: false,
+            top: false,
+            right: false,
+            bottom: false
+        }; //上下左右
+
+        setInterval(function () {
+            if (direction.left) {
+                window.scrollBy(-10, 0);
+            } else if (direction.top) {
+                window.scrollBy(0, -10);
+            } else if (direction.right) {
+                window.scrollBy(10, 0);
+            } else if (direction.bottom) {
+                window.scrollBy(0, 10);
+            }
+        }, 1);
+
+        document.addEventListener("keydown", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = true;
+                    break;
+                case "ArrowUp":
+                    direction.top = true;
+                    break;
+                case "ArrowRight":
+                    direction.right = true;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = true;
+                    break;
+            }
+        });
+        document.addEventListener("keyup", function (e) {
+            switch (e.key) {
+                case "ArrowLeft":
+                    direction.left = false;
+                    break;
+                case "ArrowUp":
+                    direction.top = false;
+                    break;
+                case "ArrowRight":
+                    direction.right = false;
+                    break;
+                case "ArrowDown":
+                    direction.bottom = false;
+                    break;
+            }
+        });
+    })
+</script>
+    <script>
+        function changeBgText() {
+            const bgText = document.getElementById("bg-text");
+            if (bgText.style.display === "none") {
+                bgText.style.display = "block";
+            } else {
+                bgText.style.display = "none";
+            }
+        }
+
+        window.changeBgText = changeBgText;
+    </script>
+    <script src="../js/getDate.js"></script>
+<footer>
+    <button id='time-btn' style='position: fixed; bottom: 15px; right: 120px; border: groove;'>隐藏时间</button>
+    <p id='time' style='position: fixed; bottom: 0; right: 0;'>
+        当前时间:<br/>
+        <span id="time-show"></span>
+    </p>
+    <script>
+        function setTime() {
+            document.getElementById("time-show").innerHTML = date().toString();
+        }
+
+        setTime();
+        setInterval(setTime, 1000);
+
+        function changeTime() {
+            const timeParagraph = document.querySelector('p#time');
+            const timeButton = document.getElementById('time-btn');
+            if (timeParagraph.style.display === 'none') {
+                timeParagraph.style.display = 'block';
+                timeButton.textContent = '隐藏时间';
+            } else {
+                timeParagraph.style.display = 'none';
+                timeButton.textContent = "显示时间";
+                timeButton.style.display = 'none';
+            }
+        }
+
+        document.getElementById('time-btn').addEventListener('click', function () {
+            changeTime();
+            if (this.style.display === 'none') {
+                this.style.display = 'block';
+            }
+        });
+    </script>
+</footer>
+    <script src="../js/translate.js"></script>
+<script type="module">
+    const loaded = await loadJson("../lang.json");
+    const btot = loaded[0], ttob = loaded[1];
+    translate.service.use('client.edge');
+    const user_language = navigator.language;
+    // console.log(user_language);
+    translate.language.setDefaultTo(btot[user_language]);
+    translate.language.setLocal(user_language);
+    translate.listener.start();
+    translate.selectLanguageTag.show = true;
+    // document.getElementById("translateSelectLanguage").querySelectorAll("option").forEach(
+    //     (item) => {
+    //         console.log(item.value);
+    //     }
+    // )
+</script>
+</div>
+<div id="body-content">
+    <script>
+    let url = getParam("url", "");
+    if (url) {
+        // 如果有指定的 URL，则跳转到该 URL
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "https://" + url;
+        }
+        location.replace(url);
+    }else {
+        getError(404);
+    }
+</script>
+</div>
+<hr/>
+<div id="footer-container">
+    <footer>
+        <a href="../license" target="_blank">版权申明</a>
+        <br/>
+        <a href="../robots.txt" target="_blank">机器人协议</a>
+    </footer>
+    <div style="height: 80px;"></div>
+    <div id="text"></div>
+<script>
+    function translateText(text){
+        const divText = document.getElementById("text");
+        divText.innerHTML = text;
+        translate.execute();
+        const res = divText.innerHTML;
+        divText.innerHTML = "";
+        return res;
+    }
+</script>
+    <script>
+        execute();
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("select").forEach((select) => {
+                select.addEventListener('mouseenter', function () {
+                    select.multiple = "multiple";
+                })
+                select.addEventListener('mouseleave', function () {
+                    select.multiple = "";
+                })
+                select.addEventListener('change', function () {
+                    select.multiple = "";
+                })
+            });
+        })
+    </script>
+</div>
+</body>
+</html>
