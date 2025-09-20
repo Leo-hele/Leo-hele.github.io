@@ -16,15 +16,15 @@
     <div id="header">
     <div class="header" style="position: relative;">
       
-      <a href="/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/" class="headerItem" data-nas style="color: #f5f5f7;">
         首页
       </a>
       
-      <a href="/about/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/about" class="headerItem" data-nas style="color: #f5f5f7;">
         关于
       </a>
       
-      <a href="/blogs/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/blogs" class="headerItem" data-nas style="color: #f5f5f7;">
         文章
       </a>
       
@@ -59,7 +59,7 @@
     });
 </script>
 <script>
-    d$.ready(function () {
+    $(document).ready(function () {
         let direction = {
             left: false,
             top: false,
@@ -183,7 +183,7 @@
     <h1>404 Not found</h1>
 <p><strong>页面不存在</strong></p>
 <p>您访问的页面不存在，可能是因为链接已过期，或者您直接进入了错误的地址。</p>
-<p>建议您<a href="javascript:location.href=Url;">返回首页</a>、<a href="javascript:history.back()">返回上一页</a> ，或者使用搜索功能查找您需要的内容。</p>
+<p>建议您<a href="javascript:location.href=BaseUrl;">返回首页</a>、<a href="javascript:history.back()">返回上一页</a> ，或者使用搜索功能查找您需要的内容。</p>
 
 
 </div>
@@ -198,11 +198,11 @@
     <div id="text"></div>
 <script>
     function translateText(text){
-        const divText = document.getElementById("text");
-        divText.innerHTML = text;
-        translate.execute();
-        const res = divText.innerHTML;
-        divText.innerHTML = "";
+        const divText = $("#text");
+        divText.html(text);
+        translate.execute(divText.get(0));
+        const res = divText.html();
+        divText.html("");
         return res;
     }
 </script>

@@ -16,15 +16,15 @@
     <div id="header">
     <div class="header" style="position: relative;">
       
-      <a href="/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/" class="headerItem" data-nas style="color: #f5f5f7;">
         首页
       </a>
       
-      <a href="/about/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/about" class="headerItem" data-nas style="color: #f5f5f7;">
         关于
       </a>
       
-      <a href="/blogs/" class="headerItem" style="color: #f5f5f7;">
+      <a href="/blogs" class="headerItem" data-nas style="color: #f5f5f7;">
         文章
       </a>
       
@@ -59,7 +59,7 @@
     });
 </script>
 <script>
-    d$.ready(function () {
+    $(document).ready(function () {
         let direction = {
             left: false,
             top: false,
@@ -182,7 +182,7 @@
 <div id="body-content">
     <script src="../js/download.js" type="module"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", changeBgText);
+    $(document).ready(changeBgText);
 </script>
 <link class="add-md" rel="dns-prefetch" href="//cdn.mathjax.org" xmlns="http://www.w3.org/1999/html"/>
 <link class="add-md" rel="stylesheet" href="../prism.css"/>
@@ -248,47 +248,45 @@
     </div>
 </article>
 <script class="add-md">
+    document.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach((ele) => {
+        console.log(ele.innerHTML);
+    })
     
-
     function addLiquid() {
-        const md = document.getElementById("md-file");
-        let res = md.innerHTML.replaceAll("{\\%", "{%");
+        const md = $("#md-file");
+        let res = md.html();
+        res = res.replaceAll("{\\%", "{%");
         res = res.replaceAll("{\\{", "{{");
-        md.innerHTML = res;
+        console.log(res);
+        md.html(res);
     }
-
     addLiquid();
     
+    document.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach((ele) => {
+        console.log(ele);
+    })
 
     function Query(className) {
-        const mdfile = document.getElementById("md-file");
-        const elements = mdfile.querySelectorAll(`${className}`);
+        const mdfile = $("#md-file");
+        const elements = mdfile.find(className);
         return elements;
-    }
-
-    function doSe(className, callback) {
-        let elements = Query(className);
-        if (elements === null) return;
-        elements.forEach((element) => {
-            callback(element);
-        });
     }
 
     function new_innerHTML(parent, callback, addtag = true) {
         let tag = ["", ""];
         if (addtag) {
-            tag = parent.outerHTML.split(parent.innerHTML);
+            tag = parent.prop("outerHTML").split(parent.html());
         }
         let new_inner = tag[0];
-        const children = parent.childNodes;
+        const children = parent.children();
         const noTag = ['A'];
+        // console.log("new_innerHTML:", parent[0]);
 
-        children.forEach((celement) => {
-            let element = celement;
-            if ("tagName" in element && noTag.includes(element.tagName.toUpperCase())) {
-                element.className += " " + 'heading-aa';
-                new_inner += element.outerHTML;
-            } else if (element.children) {
+        children.each((index, celement) => {
+            let element = $(celement);
+            if ("tagName" in element && noTag.includes(element.prop("tagName").toUpperCase())) {
+                new_inner += element.prop("outerHTML");
+            } else if (element.children.length > 0) {
                 new_inner += new_innerHTML(element, callback);
             } else {
                 new_inner += callback(element);
@@ -299,43 +297,47 @@
     }
 
     function generateTOC() {
-        const headings = Array.from(Query("h1, h2, h3, h4, h5, h6"))
-            .filter(heading => heading.className !== 'toc-ignore')
-            .map((heading, index) => {
+        document.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach((ele) => {
+            console.log(ele);
+        })
+        const headings = Query("h1,h2,h3,h4,h5,h6")
+            .filter(heading => ! $(heading).hasClass('toc-ignore'))
+            .each((index, cheading) => {
+                let heading = $(cheading);
                 // 增强ID生成安全性
-                let id = heading.textContent;
-                id += `-heading${index}`;
-                heading.id = id;
+                let id = heading.text();
+                id = `homf${index}-${id}`;
+                heading.attr("id", id);
                 return heading;
             });
 
-        const tocContainer = document.getElementById('toc');
+        const tocContainer = $("#toc");
         let currentLevel = 1;
         let tocHTML = '<ul style="padding-left: 0">';
-        headings.forEach((cheading, index) => {
-            let heading = cheading;
-            heading.className += "no-wrap";
-            const id = cheading.id;
+        $.each(headings, (index, cheading) => {
+            let heading = $(cheading);
+            heading.addClass("no-wrap");
+            const id = heading.attr("id");
             heading.innerHTML = new_innerHTML(heading, (element) => {
-                const text = `<a href="#${id}" class="heading-a">${element.textContent}</a>`;
+                const text = `<a href="#${id}">${element.text()}</a>`;
+                // console.log(text);
                 return text;
             }, false);
-            const h$ = document.createElement("p");
-            h$.className = "heading-show";
-            h$.innerHTML = "#";
-            h$.style.display = "none";
-            heading.appendChild(h$);
-            d$.ready(() => {
-                const h$ = heading.querySelector(".heading-show");
-                heading.addEventListener("mouseenter", () => {
-                    h$.style.display = "inline";
+            const h$ = $(document.createElement("p"));
+            h$.addClass("heading-show");
+            h$.css("display", "none");
+            heading.append(h$);
+            $(document).ready(() => {
+                const h$ = heading.find(".heading-show");
+                heading.on("mouseenter", () => {
+                    h$.css("display", "inline");
                 });
-                heading.addEventListener("mouseleave", () => {
-                    h$.style.display = "none";
+                heading.on("mouseleave", () => {
+                    h$.css("display", "none");
                 });
             });
-            const level = parseInt(heading.tagName.substring(1));
-            heading.innerHTML = " ".repeat(level - 1) + heading.innerHTML;
+            const level = parseInt(heading.prop("tagName").substring(1));
+            heading.html(" ".repeat(level - 1) + heading.innerHTML);
 
             // 修复标签闭合逻辑
             if (level > currentLevel) {
@@ -346,30 +348,30 @@
                 tocHTML += '</li>';
             }
 
-            tocHTML += `<li><a href="#${id}">${heading.innerHTML}</a><hr/>`;
+            tocHTML += `<li><a href="#${id}">${heading.html()}</a><hr/>`;
             currentLevel = level;
         });
 
         // 闭合最后未关闭的标签
         tocHTML += '</li></ul>';
-        tocContainer.innerHTML = tocHTML;
-        tocContainer.style.display = 'block';
+        tocContainer.html(tocHTML);
+        tocContainer.css("display", "block");
 
         window.addEventListener('scroll', () => {
-            const links = tocContainer.querySelectorAll('a');
-            links.forEach(link => {
+            const links = tocContainer.find("a");
+            links.each((index, link) => {
                 if (link.className !== 'heading-a') return;
-                const hash = link.getAttribute('href') || '';
+                const hash = $(link).attr("href") || '';
                 const id = hash.startsWith('#') ? hash.slice(1) : null;
 
-                const heading = document.getElementById(id);
+                const heading = $(`#${id}`);
                 if (!heading) {
                     console.warn('找不到对应标题:', id, '链接文本:', link.textContent);
                     return;
                 }
 
-                const rect = heading.getBoundingClientRect();
-                link.classList.toggle('active', rect.top <= 100 && rect.bottom >= 100);
+                const rect = heading.offset();
+                $(link).toggleClass('active', rect.top <= 100 && rect.bottom >= 100);
             });
         });
     }
@@ -378,10 +380,19 @@
     window.addEventListener('DOMContentLoaded', generateTOC);
 
     function loadPrism() {
-        const prismScript = document.createElement('script');
-        prismScript.src = '../js/prism.js';
+        const prismScript = $(document.createElement('script'));
+        prismScript.attr("src", '../js/prism.min.js');
 
-        prismScript.onload = function () {
+        prismScript.ready(function () {
+            try {
+                if (window.Prism === undefined) {
+                    throw new Error("Prism未定义");
+                }
+            } catch (error) {
+                console.error("Prism加载失败！", error);
+                return;
+            }
+            console.log("Prism加载成功！");
             // 确保启用行号插件
             Prism.plugins.lineNumbers = true;
 
@@ -394,17 +405,16 @@
             });
 
             Prism.highlightAll();
-        };
-        document.head.appendChild(prismScript);
+        });
+        $(document.head).append(prismScript);
     }
     loadPrism();
 
     function setTag(className, tags) {
-        doSe(className, (element) => {
-            for (const key in tags) {
-                element.setAttribute(key, tags[key]);
-            }
-        });
+        for (const key in tags) {
+            const value = tags[key];
+            $(className).attr(key, value);
+        }
     }
 
     setTag("pre", {
@@ -420,27 +430,31 @@
         "decoding": "async",
         "class": "img-responsive",
     });
-    doSe("img", img => {
-        if (!img.hasAttribute('data-error-handled')) {
-            img.setAttribute('data-error-handled', 'true');
+    setTag("a", {
+        "data-nas": ""
+    })
+    $("img").each((index, img) => {
+        img = $(img);
+        if (!img.attr('data-error-handled')) {
+            img.attr('data-error-handled', 'true');
 
             // 创建备用元素
-            const fallback = document.createElement('div');
-            fallback.className = 'image-fallback';
-            fallback.innerHTML = `
+            const fallback = $(document.createElement('div'));
+            fallback.addClass("image-fallback");
+            fallback.text(`
                     <a href="${img.src}" target="_blank">图片加载失败！查看原图</a>
-                `;
-            fallback.style.display = 'none';
+                `);
+            fallback.css("display", "none");
 
             // 包装图片
-            const container = document.createElement('div');
-            container.className = 'image-container';
-            img.parentNode.insertBefore(container, img);
-            container.appendChild(img);
-            container.appendChild(fallback);
+            const container = $(document.createElement('div'));
+            container.addClass("image-container");
+            img.parent().insertBefore(container, img);
+            container.append(img);
+            container.append(fallback);
 
             // 添加错误处理
-            img.addEventListener('error', () => {
+            img.on('error', () => {
                 fallback.style.display = 'block';
             });
         }
@@ -457,16 +471,6 @@
             enableMenu: false,
         }
     };
-
-    d$.ready(function () {
-        document.querySelectorAll("a").forEach((item) => {
-            let url = item.href;
-            if (!url.startsWith(Url)) {
-                item.target = "_blank";
-                item.href = `${Url}/link.html?url=${encodeURIComponent(url)}`;
-            }
-        })
-    })
 </script>
 <script class="add-md" id="MathJax-script" async
         src="../js/mathjax/es5/tex-chtml.js">
@@ -483,11 +487,11 @@
     <div id="text"></div>
 <script>
     function translateText(text){
-        const divText = document.getElementById("text");
-        divText.innerHTML = text;
-        translate.execute();
-        const res = divText.innerHTML;
-        divText.innerHTML = "";
+        const divText = $("#text");
+        divText.html(text);
+        translate.execute(divText.get(0));
+        const res = divText.html();
+        divText.html("");
         return res;
     }
 </script>

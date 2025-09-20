@@ -18,6 +18,7 @@ body {
 
 a {
     text-decoration: none;
+    user-select: auto !important;
 }
 a:link {
     color: #7f7fff;
@@ -46,8 +47,7 @@ a:active {
     position: fixed;
     z-index: 999;
 }
-.toc-ignore {
-}
+.toc-ignore {}
 
 img {
     display: block;
@@ -74,13 +74,13 @@ code {
     user-select: text;
 }
 
-.heading-a {
+h1[href^="#"] {
     color: #ffffff;
     text-decoration: underline #0000ff solid 5px;
     cursor: default;
 }
 
-.heading-aa {
+h1:not([href^="#"]) {
     text-decoration: underline #0000ff solid 5px;
     cursor: pointer;
 }

@@ -1,2 +1,4 @@
 js/jsdom
 s.json
+!*.min.js
+*.js
